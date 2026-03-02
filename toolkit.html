@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Domovoy OPS">
+    <meta name="theme-color" content="#0a0a14">
+    <title>DOMOVOY OPS</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        :root {
+            --bg: #0a0a14;
+            --bg2: #0f0f1c;
+            --card: #141425;
+            --card-hover: #1a1a32;
+            --accent: #c9a96e;
+            --accent-light: #e0c68a;
+            --accent-glow: rgba(201, 169, 110, 0.15);
+            --text: #f0ece4;
+            --text-dim: #6a6a80;
+            --text-mid: #9a9ab0;
+            --green: #34d399;
+            --green-dim: rgba(52, 211, 153, 0.12);
+            --yellow: #fbbf24;
+            --yellow-dim: rgba(251, 191, 36, 0.12);
+            --red: #f87171;
+            --red-dim: rgba(248, 113, 113, 0.12);
+            --blue: #60a5fa;
+            --blue-dim: rgba(96, 165, 250, 0.12);
+            --purple: #a78bfa;
+            --purple-dim: rgba(167, 139, 250, 0.12);
+            --cyan: #22d3ee;
+            --safe-top: env(safe-area-inset-top, 20px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-top: var(--safe-top);
+            padding-bottom: calc(72px + var(--safe-bottom));
+        }
+
+        /* ============ HEADER ============ */
+        .header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(10, 10, 20, 0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 14px 20px 10px;
+            border-bottom: 1px solid rgba(201, 169, 110, 0.08);
+        }
+        .header-row {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .header h1 {
+            font-size: 18px; font-weight: 800;
+            letter-spacing: 3px; color: var(--accent);
+        }
+        .header h1 span {
+            font-weight: 400; font-size: 11px; letter-spacing: 1px;
+            color: var(--text-dim); display: block; margin-top: 1px;
+        }
+        .header-status {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 11px; color: var(--green);
+            font-weight: 600; letter-spacing: 0.5px;
+        }
+        .header-status::before {
+            content: ''; width: 6px; height: 6px;
+            border-radius: 50%; background: var(--green);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+        }
+
+        /* ============ TAB BAR ============ */
+        .tab-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(10, 10, 20, 0.94);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            display: flex; justify-content: space-around;
+            padding: 6px 0 calc(6px + var(--safe-bottom));
+            border-top: 1px solid rgba(201, 169, 110, 0.08);
+        }
+        .tab-item {
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            background: none; border: none;
+            color: var(--text-dim); font-size: 10px; font-weight: 600;
+            letter-spacing: 0.8px; text-transform: uppercase;
+            cursor: pointer; padding: 6px 12px;
+            transition: color 0.2s;
+        }
+        .tab-item.active { color: var(--accent); }
+        .tab-item .tab-icon { font-size: 22px; }
+
+        /* ============ PAGES ============ */
+        .page { display: none; padding: 16px 16px 24px; }
+        .page.active { display: block; animation: fadeUp 0.3s ease; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============ SHARED COMPONENTS ============ */
+        .section-label {
+            font-size: 11px; font-weight: 700;
+            color: var(--accent); text-transform: uppercase;
+            letter-spacing: 2.5px; margin: 20px 0 10px;
+        }
+        .section-label:first-child { margin-top: 0; }
+
+        .card {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: border-color 0.2s;
+        }
+        .card:active { border-color: rgba(201,169,110,0.2); }
+
+        .card-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 10px;
+        }
+        .card-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+        .card-title { font-size: 15px; font-weight: 700; }
+        .card-subtitle { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
+        .card-text { font-size: 13px; color: var(--text-mid); line-height: 1.6; }
+
+        .badge {
+            display: inline-block; padding: 3px 10px;
+            border-radius: 20px; font-size: 10px;
+            font-weight: 700; letter-spacing: 0.5px;
+        }
+        .badge.gold { background: var(--accent-glow); color: var(--accent); }
+        .badge.green { background: var(--green-dim); color: var(--green); }
+        .badge.red { background: var(--red-dim); color: var(--red); }
+        .badge.blue { background: var(--blue-dim); color: var(--blue); }
+        .badge.yellow { background: var(--yellow-dim); color: var(--yellow); }
+        .badge.purple { background: var(--purple-dim); color: var(--purple); }
+
+        /* ============ STATS GRID ============ */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 8px; margin-bottom: 14px;
+        }
+        .stat-box {
+            background: var(--card); border-radius: 12px;
+            padding: 12px 8px; text-align: center;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        .stat-num {
+            font-size: 24px; font-weight: 800;
+            font-variant-numeric: tabular-nums;
+        }
+        .stat-label {
+            font-size: 9px; color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        /* ============ ACTION BUTTONS ============ */
+        .actions-row {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 8px; margin-bottom: 14px;
+        }
+        .action-btn {
+            background: var(--card); border: 1px solid rgba(201,169,110,0.12);
+            border-radius: 12px; padding: 14px 12px;
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer; transition: all 0.2s;
+            color: var(--text); font-size: 13px; font-weight: 600;
+        }
+        .action-btn:active {
+            background: var(--card-hover);
+            border-color: var(--accent);
+            transform: scale(0.98);
+        }
+        .action-btn .btn-icon {
+            font-size: 20px;
+        }
+        .action-btn.primary {
+            background: linear-gradient(135deg, rgba(201,169,110,0.15), rgba(201,169,110,0.05));
+            border-color: rgba(201,169,110,0.25);
+        }
+
+        /* ============ PIPELINE KANBAN ============ */
+        .pipeline-lane {
+            margin-bottom: 16px;
+        }
+        .lane-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 8px; padding: 0 4px;
+        }
+        .lane-title {
+            font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .lane-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+        }
+        .lane-count {
+            font-size: 11px; color: var(--text-dim);
+            font-weight: 600;
+        }
+        .property-card {
+            background: var(--card); border-radius: 12px;
+            padding: 14px; margin-bottom: 8px;
+            border: 1px solid rgba(255,255,255,0.03);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .property-card:active {
+            border-color: rgba(201,169,110,0.2);
+            transform: scale(0.99);
+        }
+        .property-row {
+            display: flex; justify-content: space-between; align-items: flex-start;
+        }
+        .property-name {
+            font-size: 14px; font-weight: 700;
+        }
+        .property-zone {
+            font-size: 11px; color: var(--text-dim); margin-top: 2px;
+        }
+        .property-price {
+            font-size: 13px; font-weight: 700; color: var(--accent);
+            text-align: right;
+        }
+        .property-price small {
+            display: block; font-size: 10px; color: var(--text-dim);
+            font-weight: 400;
+        }
+        .property-tags {
+            display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;
+        }
+        .property-tag {
+            font-size: 10px; padding: 2px 8px;
+            border-radius: 6px; font-weight: 600;
+            background: rgba(255,255,255,0.04); color: var(--text-dim);
+        }
+
+        /* ============ ADD PROPERTY FORM ============ */
+        .add-form {
+            display: none; background: var(--card);
+            border-radius: 16px; padding: 20px;
+            margin-bottom: 14px; border: 1px solid rgba(201,169,110,0.15);
+        }
+        .add-form.open { display: block; animation: fadeUp 0.2s ease; }
+        .form-title {
+            font-size: 16px; font-weight: 700; margin-bottom: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .form-row { margin-bottom: 12px; }
+        .form-label {
+            font-size: 11px; color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 4px; font-weight: 600;
+        }
+        .form-input {
+            width: 100%; padding: 10px 14px;
+            background: var(--bg2); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px; color: var(--text);
+            font-size: 14px; outline: none;
+            font-family: inherit;
+        }
+        .form-input:focus { border-color: rgba(201,169,110,0.3); }
+        .form-input::placeholder { color: var(--text-dim); }
+        select.form-input { -webkit-appearance: none; appearance: none; }
+
+        .form-actions {
+            display: flex; gap: 8px; margin-top: 16px;
+        }
+        .btn {
+            flex: 1; padding: 12px; border-radius: 10px;
+            font-size: 14px; font-weight: 700; border: none;
+            cursor: pointer; font-family: inherit;
+        }
+        .btn-primary {
+            background: var(--accent); color: var(--bg);
+        }
+        .btn-ghost {
+            background: transparent; color: var(--text-dim);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* ============ CHECKLISTS ============ */
+        .checklist { list-style: none; }
+        .checklist li {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 13px; line-height: 1.5;
+            cursor: pointer; -webkit-user-select: none; user-select: none;
+        }
+        .checklist li:last-child { border-bottom: none; }
+        .check-box {
+            width: 22px; height: 22px; min-width: 22px;
+            border-radius: 7px;
+            border: 2px solid rgba(255,255,255,0.12);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; margin-top: 1px;
+        }
+        .checklist li.checked .check-box {
+            background: var(--green); border-color: var(--green);
+        }
+        .checklist li.checked .check-box::after {
+            content: '\2713'; color: #000; font-size: 12px; font-weight: 800;
+        }
+        .checklist li.checked .check-text {
+            text-decoration: line-through; color: var(--text-dim);
+        }
+
+        /* ============ EXPANDABLE ============ */
+        .expandable { cursor: pointer; }
+        .expand-arrow {
+            margin-left: auto; font-size: 14px;
+            color: var(--text-dim); transition: transform 0.3s;
+        }
+        .expandable.open .expand-arrow { transform: rotate(90deg); }
+        .expand-content {
+            display: none; margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+        .expandable.open .expand-content { display: block; }
+
+        /* ============ TABLES ============ */
+        .info-table { width: 100%; font-size: 13px; border-collapse: collapse; }
+        .info-table td {
+            padding: 9px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            vertical-align: top;
+        }
+        .info-table td:first-child {
+            color: var(--text-dim); width: 38%; padding-right: 12px;
+        }
+        .info-table tr:last-child td { border-bottom: none; }
+
+        /* ============ TIPS ============ */
+        .tip {
+            background: var(--accent-glow);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+            padding: 12px 14px; margin-bottom: 10px;
+            font-size: 12px; line-height: 1.6;
+        }
+        .tip strong { color: var(--accent); }
+        .tip.danger { background: var(--red-dim); border-left-color: var(--red); }
+        .tip.danger strong { color: var(--red); }
+        .tip.blue { background: var(--blue-dim); border-left-color: var(--blue); }
+        .tip.blue strong { color: var(--blue); }
+
+        /* ============ CLAUDE PROMPT CARDS ============ */
+        .claude-prompt {
+            background: linear-gradient(135deg, rgba(167,139,250,0.06), rgba(96,165,250,0.06));
+            border: 1px solid rgba(167,139,250,0.12);
+            border-radius: 12px; padding: 14px;
+            margin-bottom: 10px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .claude-prompt:active {
+            border-color: rgba(167,139,250,0.4);
+            transform: scale(0.99);
+        }
+        .claude-prompt-label {
+            font-size: 10px; font-weight: 700;
+            color: var(--purple); text-transform: uppercase;
+            letter-spacing: 1.5px; margin-bottom: 6px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .claude-prompt-text {
+            font-size: 12px; color: var(--text-mid);
+            line-height: 1.6; font-style: italic;
+        }
+        .claude-prompt-action {
+            font-size: 11px; color: var(--blue);
+            font-weight: 600; margin-top: 8px;
+        }
+
+        /* ============ VOICE COMMANDS ============ */
+        .voice-cmd {
+            background: var(--blue-dim);
+            border: 1px solid rgba(96,165,250,0.12);
+            border-radius: 10px; padding: 10px 14px;
+            margin-bottom: 8px;
+        }
+        .voice-cmd .cmd {
+            font-size: 13px; color: var(--blue); font-weight: 700;
+        }
+        .voice-cmd .desc {
+            font-size: 11px; color: var(--text-dim); margin-top: 2px;
+        }
+
+        /* ============ CALCULATOR ============ */
+        .calc-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+        }
+        .calc-result {
+            background: var(--bg2); border-radius: 10px;
+            padding: 12px; text-align: center;
+        }
+        .calc-result .val {
+            font-size: 20px; font-weight: 800; color: var(--accent);
+            font-variant-numeric: tabular-nums;
+        }
+        .calc-result .label {
+            font-size: 10px; color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;
+        }
+
+        /* ============ PROGRESS BAR ============ */
+        .progress-bar {
+            height: 4px; background: rgba(255,255,255,0.04);
+            border-radius: 2px; overflow: hidden; margin: 8px 0;
+        }
+        .progress-fill {
+            height: 100%; border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        /* ============ WORKFLOW STEPS ============ */
+        .workflow-step {
+            display: flex; gap: 12px; margin-bottom: 14px;
+        }
+        .step-num {
+            width: 28px; height: 28px; min-width: 28px;
+            border-radius: 50%; background: var(--accent);
+            color: var(--bg); display: flex;
+            align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 800;
+        }
+        .step-content h4 {
+            font-size: 14px; font-weight: 700; margin-bottom: 2px;
+        }
+        .step-content p {
+            font-size: 12px; color: var(--text-dim); line-height: 1.5;
+        }
+
+        /* ============ EMPTY STATE ============ */
+        .empty-state {
+            text-align: center; padding: 30px 20px;
+            color: var(--text-dim);
+        }
+        .empty-state .empty-icon { font-size: 36px; margin-bottom: 10px; }
+        .empty-state p { font-size: 13px; line-height: 1.6; }
+
+        /* ============ QUICK EXPORT ============ */
+        .export-btn {
+            display: block; width: 100%; padding: 12px;
+            background: var(--green-dim); border: 1px solid rgba(52,211,153,0.15);
+            border-radius: 10px; color: var(--green);
+            font-size: 13px; font-weight: 700;
+            cursor: pointer; text-align: center;
+            margin-top: 6px; font-family: inherit;
+        }
+
+        .reset-btn {
+            display: block; width: 100%; padding: 12px;
+            background: var(--red-dim); border: 1px solid rgba(248,113,113,0.12);
+            border-radius: 10px; color: var(--red);
+            font-size: 13px; font-weight: 700;
+            cursor: pointer; text-align: center;
+            margin-top: 16px; font-family: inherit;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+            background: var(--green); color: #000;
+            padding: 10px 20px; border-radius: 10px;
+            font-size: 13px; font-weight: 700;
+            z-index: 200; opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .toast.show { opacity: 1; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 0; }
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toast">OK</div>
+
+<!-- ============ HEADER ============ -->
+<div class="header">
+    <div class="header-row">
+        <h1>DOMOVOY OPS <span>iPhone 17 Pro + Claude AI + Phuket</span></h1>
+        <div class="header-status">LIVE</div>
+    </div>
+</div>
+
+<!-- ==================== PAGE: OPS ==================== -->
+<div class="page active" id="page-ops">
+
+    <div class="section-label">Pipeline</div>
+    <div class="stats-grid" id="pipeline-stats">
+        <div class="stat-box">
+            <div class="stat-num" style="color: var(--blue)" id="stat-prospect">0</div>
+            <div class="stat-label">Prospect</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" style="color: var(--yellow)" id="stat-visited">0</div>
+            <div class="stat-label">Visites</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" style="color: var(--purple)" id="stat-nego">0</div>
+            <div class="stat-label">Nego</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" style="color: var(--green)" id="stat-signed">0</div>
+            <div class="stat-label">Signees</div>
+        </div>
+    </div>
+
+    <div class="section-label">Actions rapides</div>
+    <div class="actions-row">
+        <button class="action-btn primary" onclick="toggleAddForm()">
+            <span class="btn-icon">+</span> Nouvelle propriete
+        </button>
+        <button class="action-btn" onclick="exportPipeline()">
+            <span class="btn-icon">&#x1F4CB;</span> Export WhatsApp
+        </button>
+    </div>
+    <div class="actions-row">
+        <button class="action-btn" onclick="switchTab('capture')">
+            <span class="btn-icon">&#x1F4F7;</span> Mode capture
+        </button>
+        <button class="action-btn" onclick="openClaudeAnalysis()">
+            <span class="btn-icon">&#x1F916;</span> Ask Claude
+        </button>
+    </div>
+
+    <div class="section-label">Workflow visite</div>
+    <div class="card">
+        <div class="workflow-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+                <h4>Ray-Ban Meta 2 — Video POV</h4>
+                <p>"Hey Meta, start recording" — visite mains libres</p>
+            </div>
+        </div>
+        <div class="workflow-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+                <h4>iPhone — Photos 48MP + LiDAR</h4>
+                <p>Shot list, scan 3D, mesures exactes</p>
+            </div>
+        </div>
+        <div class="workflow-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+                <h4>Note vocale — Impressions</h4>
+                <p>30 sec de debrief en partant, Claude transcrit apres</p>
+            </div>
+        </div>
+        <div class="workflow-step" style="margin-bottom:0">
+            <div class="step-num">4</div>
+            <div class="step-content">
+                <h4>Claude — Fiche & message client</h4>
+                <p>Colle notes + photos &rarr; Claude genere fiche + WhatsApp</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">Taux de change</div>
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="stat-num" style="color: var(--text); font-size: 18px;">~35</div>
+            <div class="stat-label">THB/USD</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" style="color: var(--text); font-size: 18px;">~38</div>
+            <div class="stat-label">THB/EUR</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" style="color: var(--text); font-size: 18px;">~44</div>
+            <div class="stat-label">THB/GBP</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" style="color: var(--text); font-size: 18px;">~0.38</div>
+            <div class="stat-label">THB/RUB</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ==================== PAGE: CAPTURE ==================== -->
+<div class="page" id="page-capture">
+
+    <div class="section-label">Reglages camera</div>
+
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--blue-dim);">&#x1F4F8;</div>
+            <div>
+                <div class="card-title">Photos Hero (48MP ProRAW)</div>
+                <div class="card-subtitle">Le mode qui fait la difference</div>
+            </div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content">
+            <table class="info-table">
+                <tr><td>Format</td><td><strong>48MP ProRAW</strong><br>Reglages &rarr; Appareil photo &rarr; Formats</td></tr>
+                <tr><td>Objectif</td><td>Principal 48MP (1x)</td></tr>
+                <tr><td>HDR</td><td>ON (gere le soleil thai)</td></tr>
+                <tr><td>Grille</td><td>ON (aligner les murs)</td></tr>
+                <tr><td>Flash</td><td>OFF toujours</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--purple-dim);">&#x1F52D;</div>
+            <div>
+                <div class="card-title">Zoom 5x — Ton avantage</div>
+                <div class="card-subtitle">Ce que les autres agents ne voient pas</div>
+            </div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content">
+            <ul class="checklist">
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Etat du toit depuis le sol</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Gouttieres et drainage</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Joints des fenetres en hauteur</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Fissures au plafond</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--green-dim);">&#x1F4D0;</div>
+            <div>
+                <div class="card-title">LiDAR — Scan 3D</div>
+                <div class="card-subtitle">Plan au sol automatique</div>
+            </div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content">
+            <table class="info-table">
+                <tr><td>App</td><td><strong>Polycam</strong> ou <strong>RoomPlan</strong></td></tr>
+                <tr><td>Methode</td><td>Balayer lentement chaque piece</td></tr>
+                <tr><td>Output</td><td>Plan au sol + mesures exactes en m2</td></tr>
+                <tr><td>Export</td><td>PDF ou USDZ pour visite virtuelle</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-label">Shot list</div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--accent-glow);">&#x1F3E1;</div>
+            <div><div class="card-title">Exterieur</div></div>
+        </div>
+        <ul class="checklist" data-group="exterior">
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Facade frontale (1x, droit)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Portail / entree</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Jardin / paysager</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Piscine (vers la maison)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Parking / garage</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Vue rue + quartier</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Vue (mer, montagne, sunset)</span></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--accent-glow);">&#x1F6CB;&#xFE0F;</div>
+            <div><div class="card-title">Interieur (par piece)</div></div>
+        </div>
+        <ul class="checklist" data-group="interior">
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Plan large depuis la porte (0.5x)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Point fort (ilot, baignoire, rangements)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Fenetre / vue depuis l'interieur</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Detail finitions (plan de travail, sol)</span></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--red-dim);">&#x26A0;&#xFE0F;</div>
+            <div><div class="card-title">Ne pas oublier</div></div>
+        </div>
+        <ul class="checklist" data-group="mustcapture">
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Chauffe-eau (marque, etat)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Tableau electrique</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Climatiseurs (marque, age)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Test pression eau (video)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Plafonds — traces d'eau</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Tout dommage / usure</span></li>
+        </ul>
+    </div>
+
+    <button class="reset-btn" onclick="resetChecks()">Reinitialiser les check-lists</button>
+
+    <div class="section-label" style="margin-top:24px;">Claude AI — Prompts prets</div>
+
+    <div class="claude-prompt" onclick="copyPrompt('listing')">
+        <div class="claude-prompt-label">&#x1F916; Prompt &rarr; Copier</div>
+        <div class="claude-prompt-text">"Voici mes notes de visite et photos d'une propriete a [ZONE]. Genere : 1) Une fiche propriete pro (EN + FR + RU) 2) Un message WhatsApp accrocheur pour un client famille avec enfants 3) Les 3 points forts et 3 points faibles."</div>
+        <div class="claude-prompt-action">Tap pour copier</div>
+    </div>
+
+    <div class="claude-prompt" onclick="copyPrompt('compare')">
+        <div class="claude-prompt-label">&#x1F916; Prompt &rarr; Copier</div>
+        <div class="claude-prompt-text">"Compare ces 2 proprietes pour une famille avec [N] enfants a [ECOLE]. Budget max [X] THB/mois. Fais un tableau comparatif : prix, distance ecole, surface, etat, avantages, inconvenients. Recommandation finale."</div>
+        <div class="claude-prompt-action">Tap pour copier</div>
+    </div>
+
+    <div class="claude-prompt" onclick="copyPrompt('negotiate')">
+        <div class="claude-prompt-label">&#x1F916; Prompt &rarr; Copier</div>
+        <div class="claude-prompt-text">"Le proprietaire demande [X] THB/mois pour [TYPE] a [ZONE]. Bail de [DUREE]. Donne-moi : 1) Analyse du prix vs marche 2) Arguments de negociation 3) Contre-offre suggeree 4) Clauses a ajouter au contrat"</div>
+        <div class="claude-prompt-action">Tap pour copier</div>
+    </div>
+
+</div>
+
+<!-- ==================== PAGE: DEALS ==================== -->
+<div class="page" id="page-deals">
+
+    <div class="add-form" id="addForm">
+        <div class="form-title">&#x2795; Ajouter une propriete</div>
+        <div class="form-row">
+            <div class="form-label">Nom</div>
+            <input class="form-input" id="f-name" placeholder="Villa Sunshine, Condo Laguna...">
+        </div>
+        <div class="form-row">
+            <div class="form-label">Zone</div>
+            <select class="form-input" id="f-zone">
+                <option value="Koh Kaew">Koh Kaew (BISP)</option>
+                <option value="Thalang">Thalang (UWC)</option>
+                <option value="Cherng Talay">Cherng Talay / Bang Tao</option>
+                <option value="Kathu">Kathu</option>
+                <option value="Chalong">Chalong</option>
+                <option value="Rawai">Rawai / Nai Harn</option>
+                <option value="Wichit">Wichit / Phuket Town</option>
+                <option value="Autre">Autre</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Prix (THB/mois)</div>
+            <input class="form-input" id="f-price" type="number" placeholder="45000">
+        </div>
+        <div class="form-row">
+            <div class="form-label">Type</div>
+            <select class="form-input" id="f-type">
+                <option value="Villa">Villa</option>
+                <option value="Maison">Maison</option>
+                <option value="Condo">Condo</option>
+                <option value="Townhouse">Townhouse</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Chambres</div>
+            <select class="form-input" id="f-beds">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5+">5+</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Notes</div>
+            <input class="form-input" id="f-notes" placeholder="Piscine, meuble, vue mer...">
+        </div>
+        <div class="form-actions">
+            <button class="btn btn-ghost" onclick="toggleAddForm()">Annuler</button>
+            <button class="btn btn-primary" onclick="addProperty()">Ajouter</button>
+        </div>
+    </div>
+
+    <div class="actions-row">
+        <button class="action-btn primary" onclick="toggleAddForm()">
+            <span class="btn-icon">+</span> Nouvelle propriete
+        </button>
+        <button class="action-btn" onclick="exportPipeline()">
+            <span class="btn-icon">&#x1F4E4;</span> Export pipeline
+        </button>
+    </div>
+
+    <div id="pipeline-container"></div>
+
+</div>
+
+<!-- ==================== PAGE: INTEL ==================== -->
+<div class="page" id="page-intel">
+
+    <div class="section-label">Propriete etrangere</div>
+
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--green-dim);">&#x1F3E2;</div>
+            <div>
+                <div class="card-title">Condo — Freehold possible</div>
+                <div class="card-subtitle"><span class="badge green">Etranger OK</span></div>
+            </div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content">
+            <div class="card-text">
+                Les etrangers <strong>peuvent posseder</strong> un condo en pleine propriete.<br><br>
+                <span class="badge green">Quota 49%</span> de proprietaires etrangers par immeuble.<br><br>
+                Toujours verifier le quota disponible AVANT de s'engager.
+            </div>
+        </div>
+    </div>
+
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--red-dim);">&#x1F3E1;</div>
+            <div>
+                <div class="card-title">Terrain & Maison</div>
+                <div class="card-subtitle"><span class="badge red">Interdit direct</span></div>
+            </div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content">
+            <table class="info-table">
+                <tr><td>Bail (Leasehold)</td><td>30 ans renouvelable <span class="badge gold">Recommande</span></td></tr>
+                <tr><td>Societe thai</td><td>Zone grise <span class="badge red">Risque</span></td></tr>
+                <tr><td>Conjoint thai</td><td>Au nom du conjoint</td></tr>
+                <tr><td>Usufruit</td><td>Droit d'usage a vie</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--accent-glow);">&#x1F4DC;</div>
+            <div>
+                <div class="card-title">Titres de propriete</div>
+                <div class="card-subtitle">Du plus fort au plus faible</div>
+            </div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content">
+            <table class="info-table">
+                <tr><td><span class="badge green">Chanote</span></td><td>Pleine propriete, GPS. <strong>C'est ce qu'il faut.</strong></td></tr>
+                <tr><td><span class="badge gold">Nor Sor 3 Gor</span></td><td>Bon. Convertible en Chanote.</td></tr>
+                <tr><td><span class="badge yellow">Nor Sor 3</span></td><td>Moyen. 30 jours affichage pour vente.</td></tr>
+                <tr><td><span class="badge red">Sor Kor 1</span></td><td>Faible. Notification seulement.</td></tr>
+                <tr><td><span class="badge red">Por Bor Tor 5</span></td><td>Fiscal UNIQUEMENT. Pas un titre.</td></tr>
+            </table>
+            <div class="tip" style="margin-top:12px;"><strong>Verification :</strong> Bureau des Terres local avec le vendeur. 100-500 THB. Toujours le faire.</div>
+        </div>
+    </div>
+
+    <div class="tip danger"><strong>Regle d'or :</strong> Toujours engager un avocat thailandais INDEPENDANT (pas celui du vendeur).</div>
+
+    <div class="section-label">Calculateur rendement</div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--accent-glow);">&#x1F4B0;</div>
+            <div><div class="card-title">Yield locatif</div></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Prix d'achat (THB)</div>
+            <input class="form-input" id="calc-buy" type="number" placeholder="5000000" oninput="calcYield()">
+        </div>
+        <div class="form-row">
+            <div class="form-label">Loyer mensuel (THB)</div>
+            <input class="form-input" id="calc-rent" type="number" placeholder="35000" oninput="calcYield()">
+        </div>
+        <div class="form-row">
+            <div class="form-label">Charges annuelles (THB)</div>
+            <input class="form-input" id="calc-charges" type="number" placeholder="60000" oninput="calcYield()">
+        </div>
+        <div class="calc-grid" style="margin-top: 12px;">
+            <div class="calc-result">
+                <div class="val" id="yield-gross">--%</div>
+                <div class="label">Yield brut</div>
+            </div>
+            <div class="calc-result">
+                <div class="val" id="yield-net">--%</div>
+                <div class="label">Yield net</div>
+            </div>
+            <div class="calc-result">
+                <div class="val" id="yield-payback">-- ans</div>
+                <div class="label">Payback</div>
+            </div>
+            <div class="calc-result">
+                <div class="val" id="yield-annual">--</div>
+                <div class="label">Revenu net/an</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">Zones de Phuket</div>
+
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div><div class="card-title">Koh Kaew</div><div class="card-subtitle">BISP, Finnway &middot; 35-120k THB</div></div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content"><div class="card-text">Villas et lotissements. Quartier famille, calme, vert. Zone priority pour BISP.</div></div>
+    </div>
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div><div class="card-title">Thalang / Pa Khlok</div><div class="card-subtitle">UWC, Thanyapura &middot; 30-100k THB</div></div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content"><div class="card-text">Grands terrains, nature, sportif. Glenalmond 2026 a venir.</div></div>
+    </div>
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div><div class="card-title">Cherng Talay / Bang Tao</div><div class="card-subtitle">HeadStart, Rassvet &middot; 40-250k+ THB</div></div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content"><div class="card-text">Laguna Phuket. Villas premium, plage. Hub expat international.</div></div>
+    </div>
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div><div class="card-title">Kathu</div><div class="card-subtitle">QSI, Kajonkiet &middot; 15-60k THB</div></div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content"><div class="card-text">Central, pratique. Moins touristique. Bon rapport qualite-prix.</div></div>
+    </div>
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div><div class="card-title">Chalong / Rawai</div><div class="card-subtitle">ISP, Oak Meadow, Buds &middot; 15-200k THB</div></div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content"><div class="card-text">Populaire Europeens / Russes. Yacht clubs. Mix villas et condos.</div></div>
+    </div>
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-header">
+            <div><div class="card-title">Wichit / Phuket Town</div><div class="card-subtitle">HeadStart City, Rainbow &middot; 10-40k THB</div></div>
+            <span class="expand-arrow">&#x203A;</span>
+        </div>
+        <div class="expand-content"><div class="card-text">Le plus local et authentique. Condos, townhouses, marches de nuit.</div></div>
+    </div>
+
+    <div class="section-label">Saisons & timing</div>
+    <div class="card">
+        <table class="info-table">
+            <tr><td>Haute saison</td><td><strong>Nov - Avr</strong><br>Prix au plus haut, meilleur temps</td></tr>
+            <tr><td>Basse saison</td><td><strong>Mai - Oct</strong><br>Meilleure nego, pluie</td></tr>
+            <tr><td>Pic mousson</td><td><strong>Sep - Oct</strong><br>Ideal pour tester les fuites</td></tr>
+            <tr><td>Rentree scolaire</td><td><strong>Aout - Sep</strong><br>Pic de demande familles</td></tr>
+        </table>
+    </div>
+
+    <div class="section-label">Frais d'achat</div>
+    <div class="card">
+        <table class="info-table">
+            <tr><td>Transfert</td><td>2% (souvent 50/50)</td></tr>
+            <tr><td>Droit de timbre</td><td>0.5%</td></tr>
+            <tr><td>Taxe speciale</td><td>3.3% (si &lt; 5 ans)</td></tr>
+            <tr><td>Retenue source</td><td>Progressif / 1% societe</td></tr>
+        </table>
+    </div>
+
+    <div class="section-label">Voice commands terrain</div>
+
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Meta, start recording"</div>
+        <div class="desc">Demarre la video POV en mains libres</div>
+    </div>
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Meta, take a photo"</div>
+        <div class="desc">Photo rapide sans sortir le tel</div>
+    </div>
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Siri, note Domovoy"</div>
+        <div class="desc">Ouvre une note vocale rapide (Shortcut a configurer)</div>
+    </div>
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Siri, scan cette piece"</div>
+        <div class="desc">Lance Polycam/RoomPlan pour LiDAR (Shortcut)</div>
+    </div>
+
+    <div class="section-label">Thai utile sur le terrain</div>
+    <div class="card">
+        <table class="info-table">
+            <tr><td>Combien/mois ?</td><td><strong>Kee baht tor deuan?</strong></td></tr>
+            <tr><td>Voir le Chanote ?</td><td><strong>Kor doo Chanote dai mai?</strong></td></tr>
+            <tr><td>Disponible quand ?</td><td><strong>Wang meu a meu rai?</strong></td></tr>
+            <tr><td>Negociable ?</td><td><strong>Lor ra-ka dai mai?</strong></td></tr>
+            <tr><td>Le proprietaire ?</td><td><strong>Jao kong pen krai?</strong></td></tr>
+            <tr><td>Filmer OK ?</td><td><strong>Tai video dai mai?</strong></td></tr>
+        </table>
+    </div>
+
+    <div class="tip danger"><strong>Ray-Ban Meta :</strong> Toujours prevenir. Dans les temples : retirer ou eteindre.</div>
+
+</div>
+
+<!-- ============ TAB BAR ============ -->
+<div class="tab-bar">
+    <button class="tab-item active" onclick="switchTab('ops')">
+        <span class="tab-icon">&#x26A1;</span>
+        <span>OPS</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('capture')">
+        <span class="tab-icon">&#x1F4F7;</span>
+        <span>Capture</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('deals')">
+        <span class="tab-icon">&#x1F4BC;</span>
+        <span>Deals</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('intel')">
+        <span class="tab-icon">&#x1F9E0;</span>
+        <span>Intel</span>
+    </button>
+</div>
+
+<script>
+// ============ CORE STATE ============
+const STORAGE_KEY = 'domovoy-ops';
+let state = loadState();
+
+function loadState() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        return {
+            properties: saved.properties || [],
+            checks: saved.checks || {},
+            nextId: saved.nextId || 1
+        };
+    } catch (e) {
+        return { properties: [], checks: {}, nextId: 1 };
+    }
+}
+
+function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+// ============ TAB NAVIGATION ============
+function switchTab(tabId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + tabId).classList.add('active');
+    const tabs = document.querySelectorAll('.tab-item');
+    const tabMap = { ops: 0, capture: 1, deals: 2, intel: 3 };
+    if (tabs[tabMap[tabId]]) tabs[tabMap[tabId]].classList.add('active');
+    window.scrollTo(0, 0);
+    if (tabId === 'deals') renderPipeline();
+}
+
+// ============ EXPANDABLE ============
+function toggleExpand(el) {
+    el.classList.toggle('open');
+}
+
+// ============ CHECKLISTS ============
+function toggleCheck(li) {
+    li.classList.toggle('checked');
+    saveChecks();
+}
+
+function saveChecks() {
+    const checks = {};
+    document.querySelectorAll('.checklist').forEach((list, i) => {
+        list.querySelectorAll('li').forEach((li, j) => {
+            checks[i + '-' + j] = li.classList.contains('checked');
+        });
+    });
+    state.checks = checks;
+    saveState();
+}
+
+function loadChecks() {
+    document.querySelectorAll('.checklist').forEach((list, i) => {
+        list.querySelectorAll('li').forEach((li, j) => {
+            if (state.checks[i + '-' + j]) li.classList.add('checked');
+        });
+    });
+}
+
+function resetChecks() {
+    document.querySelectorAll('.checklist li').forEach(li => li.classList.remove('checked'));
+    state.checks = {};
+    saveState();
+    showToast('Check-lists RAZ');
+}
+
+// ============ PROPERTY MANAGEMENT ============
+function toggleAddForm() {
+    const form = document.getElementById('addForm');
+    form.classList.toggle('open');
+    if (form.classList.contains('open')) {
+        document.getElementById('f-name').focus();
+        // If on OPS page, switch to deals
+        if (document.getElementById('page-ops').classList.contains('active')) {
+            switchTab('deals');
+            setTimeout(() => form.classList.add('open'), 100);
+        }
+    }
+}
+
+function addProperty() {
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { showToast('Nom requis'); return; }
+
+    const prop = {
+        id: state.nextId++,
+        name: name,
+        zone: document.getElementById('f-zone').value,
+        price: parseInt(document.getElementById('f-price').value) || 0,
+        type: document.getElementById('f-type').value,
+        beds: document.getElementById('f-beds').value,
+        notes: document.getElementById('f-notes').value.trim(),
+        status: 'prospect',
+        created: new Date().toISOString().split('T')[0]
+    };
+
+    state.properties.push(prop);
+    saveState();
+
+    // Clear form
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-price').value = '';
+    document.getElementById('f-notes').value = '';
+    document.getElementById('addForm').classList.remove('open');
+
+    renderPipeline();
+    updateStats();
+    showToast(name + ' ajoute');
+}
+
+function moveProperty(id, newStatus) {
+    const prop = state.properties.find(p => p.id === id);
+    if (prop) {
+        prop.status = newStatus;
+        saveState();
+        renderPipeline();
+        updateStats();
+    }
+}
+
+function deleteProperty(id) {
+    const prop = state.properties.find(p => p.id === id);
+    if (prop && confirm('Supprimer ' + prop.name + ' ?')) {
+        state.properties = state.properties.filter(p => p.id !== id);
+        saveState();
+        renderPipeline();
+        updateStats();
+        showToast('Supprime');
+    }
+}
+
+function formatPrice(n) {
+    if (!n) return '';
+    if (n >= 1000) return Math.round(n / 1000) + 'k';
+    return n.toString();
+}
+
+const STATUS_CONFIG = {
+    prospect: { label: 'PROSPECT', color: 'var(--blue)', dot: 'var(--blue)', next: 'visited', nextLabel: 'Marquer visite' },
+    visited: { label: 'VISITE', color: 'var(--yellow)', dot: 'var(--yellow)', next: 'nego', nextLabel: 'Passer en nego' },
+    nego: { label: 'NEGOCIATION', color: 'var(--purple)', dot: 'var(--purple)', next: 'signed', nextLabel: 'Marquer signe' },
+    signed: { label: 'SIGNE', color: 'var(--green)', dot: 'var(--green)', next: null, nextLabel: null }
+};
+
+function renderPipeline() {
+    const container = document.getElementById('pipeline-container');
+    const statuses = ['prospect', 'visited', 'nego', 'signed'];
+    let html = '';
+
+    statuses.forEach(status => {
+        const config = STATUS_CONFIG[status];
+        const props = state.properties.filter(p => p.status === status);
+
+        html += '<div class="pipeline-lane">';
+        html += '<div class="lane-header">';
+        html += '<div class="lane-title"><div class="lane-dot" style="background:' + config.dot + '"></div>' + config.label + '</div>';
+        html += '<div class="lane-count">' + props.length + '</div>';
+        html += '</div>';
+
+        if (props.length === 0) {
+            html += '<div style="padding:12px;text-align:center;font-size:12px;color:var(--text-dim);border:1px dashed rgba(255,255,255,0.06);border-radius:10px;">Aucune propriete</div>';
+        }
+
+        props.forEach(p => {
+            html += '<div class="property-card">';
+            html += '<div class="property-row">';
+            html += '<div><div class="property-name">' + escapeHtml(p.name) + '</div>';
+            html += '<div class="property-zone">' + p.zone + ' &middot; ' + p.type + ' &middot; ' + p.beds + ' ch</div></div>';
+            if (p.price) {
+                html += '<div class="property-price">' + formatPrice(p.price) + '<small>THB/mois</small></div>';
+            }
+            html += '</div>';
+
+            if (p.notes) {
+                html += '<div class="property-tags"><div class="property-tag">' + escapeHtml(p.notes) + '</div></div>';
+            }
+
+            html += '<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">';
+            if (config.next) {
+                html += '<button onclick="moveProperty(' + p.id + ',\'' + config.next + '\')" style="flex:1;padding:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:var(--text);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">' + config.nextLabel + ' &rarr;</button>';
+            }
+            html += '<button onclick="exportProperty(' + p.id + ')" style="padding:8px 12px;background:var(--green-dim);border:1px solid rgba(52,211,153,0.12);border-radius:8px;color:var(--green);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">WhatsApp</button>';
+            html += '<button onclick="deleteProperty(' + p.id + ')" style="padding:8px 12px;background:var(--red-dim);border:1px solid rgba(248,113,113,0.08);border-radius:8px;color:var(--red);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">&#x2715;</button>';
+            html += '</div>';
+
+            html += '</div>';
+        });
+
+        html += '</div>';
+    });
+
+    container.innerHTML = html;
+}
+
+function updateStats() {
+    const counts = { prospect: 0, visited: 0, nego: 0, signed: 0 };
+    state.properties.forEach(p => { counts[p.status] = (counts[p.status] || 0) + 1; });
+    document.getElementById('stat-prospect').textContent = counts.prospect;
+    document.getElementById('stat-visited').textContent = counts.visited;
+    document.getElementById('stat-nego').textContent = counts.nego;
+    document.getElementById('stat-signed').textContent = counts.signed;
+}
+
+// ============ EXPORT ============
+function exportProperty(id) {
+    const p = state.properties.find(pr => pr.id === id);
+    if (!p) return;
+
+    let text = '*' + p.name + '* - ' + p.zone + '\n';
+    text += p.type + ' | ' + p.beds + ' chambres\n';
+    if (p.price) text += formatPrice(p.price) + ' THB/mois\n';
+    if (p.notes) text += p.notes + '\n';
+    text += '\n_Domovoy - Phuket Family Housing_';
+
+    copyToClipboard(text);
+    showToast('Copie pour WhatsApp');
+}
+
+function exportPipeline() {
+    let text = '*DOMOVOY — Pipeline*\n';
+    text += new Date().toLocaleDateString('fr-FR') + '\n\n';
+
+    ['prospect', 'visited', 'nego', 'signed'].forEach(status => {
+        const config = STATUS_CONFIG[status];
+        const props = state.properties.filter(p => p.status === status);
+        if (props.length === 0) return;
+
+        text += '*' + config.label + '* (' + props.length + ')\n';
+        props.forEach(p => {
+            text += '  - ' + p.name + ' | ' + p.zone;
+            if (p.price) text += ' | ' + formatPrice(p.price) + 'THB';
+            text += '\n';
+        });
+        text += '\n';
+    });
+
+    text += '_Total: ' + state.properties.length + ' proprietes_';
+    copyToClipboard(text);
+    showToast('Pipeline copie');
+}
+
+// ============ CLAUDE PROMPTS ============
+const PROMPTS = {
+    listing: "Voici mes notes de visite et photos d'une propriete a [ZONE]. Genere :\n1) Une fiche propriete professionnelle (EN + FR + RU)\n2) Un message WhatsApp accrocheur pour un client famille avec enfants\n3) Les 3 points forts et 3 points faibles",
+    compare: "Compare ces 2 proprietes pour une famille avec [N] enfants a [ECOLE]. Budget max [X] THB/mois. Fais un tableau comparatif : prix, distance ecole, surface, etat, avantages, inconvenients. Recommandation finale.",
+    negotiate: "Le proprietaire demande [X] THB/mois pour [TYPE] a [ZONE]. Bail de [DUREE]. Donne-moi :\n1) Analyse du prix vs marche\n2) Arguments de negociation\n3) Contre-offre suggeree\n4) Clauses a ajouter au contrat"
+};
+
+function copyPrompt(key) {
+    copyToClipboard(PROMPTS[key]);
+    showToast('Prompt copie');
+}
+
+function openClaudeAnalysis() {
+    // Build a context-aware prompt with current pipeline data
+    let prompt = "Je suis agent immobilier a Phuket. Voici mon pipeline actuel :\n\n";
+    state.properties.forEach(p => {
+        prompt += "- " + p.name + " (" + p.zone + ") " + p.type + " " + p.beds + "ch";
+        if (p.price) prompt += " " + p.price + "THB/mois";
+        prompt += " [" + STATUS_CONFIG[p.status].label + "]";
+        if (p.notes) prompt += " — " + p.notes;
+        prompt += "\n";
+    });
+    prompt += "\nAnalyse mon pipeline. Quelles actions prioritaires cette semaine ?";
+    copyToClipboard(prompt);
+    showToast('Prompt pipeline copie — colle dans Claude');
+}
+
+// ============ YIELD CALCULATOR ============
+function calcYield() {
+    const buy = parseFloat(document.getElementById('calc-buy').value) || 0;
+    const rent = parseFloat(document.getElementById('calc-rent').value) || 0;
+    const charges = parseFloat(document.getElementById('calc-charges').value) || 0;
+
+    if (buy <= 0 || rent <= 0) {
+        document.getElementById('yield-gross').textContent = '--%';
+        document.getElementById('yield-net').textContent = '--%';
+        document.getElementById('yield-payback').textContent = '-- ans';
+        document.getElementById('yield-annual').textContent = '--';
+        return;
+    }
+
+    const annualRent = rent * 12;
+    const grossYield = (annualRent / buy) * 100;
+    const netIncome = annualRent - charges;
+    const netYield = (netIncome / buy) * 100;
+    const payback = buy / netIncome;
+
+    document.getElementById('yield-gross').textContent = grossYield.toFixed(1) + '%';
+    document.getElementById('yield-net').textContent = netYield.toFixed(1) + '%';
+    document.getElementById('yield-payback').textContent = payback.toFixed(1) + ' ans';
+    document.getElementById('yield-annual').textContent = formatPrice(Math.round(netIncome));
+}
+
+// ============ UTILITIES ============
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text);
+    } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+    }
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// ============ INIT ============
+loadChecks();
+updateStats();
+renderPipeline();
+</script>
+
+</body>
+</html>
