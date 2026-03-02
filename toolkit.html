@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Domovoy Toolkit">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Domovoy — Field Toolkit</title>
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%231a1a2e' width='100' height='100' rx='20'/><text x='50' y='62' text-anchor='middle' font-size='50'>🏠</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        :root {
+            --bg: #0f0f1a;
+            --card: #1a1a2e;
+            --card-hover: #222240;
+            --accent: #c9a96e;
+            --accent-light: #e0c68a;
+            --text: #f0ece4;
+            --text-dim: #8a8a9a;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --blue: #60a5fa;
+            --safe-top: env(safe-area-inset-top, 20px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-top: var(--safe-top);
+            padding-bottom: calc(80px + var(--safe-bottom));
+        }
+
+        /* HEADER */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 15, 26, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+        }
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+        .header p {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        /* TAB BAR */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(15, 15, 26, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 calc(8px + var(--safe-bottom));
+            border-top: 1px solid rgba(201, 169, 110, 0.15);
+        }
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: color 0.2s;
+        }
+        .tab-item.active { color: var(--accent); }
+        .tab-item .tab-icon { font-size: 24px; }
+
+        /* PAGES */
+        .page { display: none; padding: 20px; }
+        .page.active { display: block; }
+
+        /* CARDS */
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 14px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title .icon { font-size: 22px; }
+        .card-text {
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* CHECKLIST */
+        .checklist { list-style: none; }
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 14px;
+            line-height: 1.5;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .checklist li:last-child { border-bottom: none; }
+        .check-box {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            border-radius: 8px;
+            border: 2px solid var(--text-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            margin-top: 1px;
+        }
+        .checklist li.checked .check-box {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        .checklist li.checked .check-box::after {
+            content: '✓';
+            color: #000;
+            font-size: 14px;
+            font-weight: 800;
+        }
+        .checklist li.checked .check-text {
+            text-decoration: line-through;
+            color: var(--text-dim);
+        }
+
+        /* SECTION HEADERS */
+        .section-header {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 24px 0 12px;
+        }
+        .section-header:first-child { margin-top: 0; }
+
+        /* STATS ROW */
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .stat-card {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* TIP BOXES */
+        .tip {
+            background: rgba(201, 169, 110, 0.08);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        .tip strong { color: var(--accent); }
+        .tip.danger {
+            background: rgba(248, 113, 113, 0.08);
+            border-left-color: var(--danger);
+        }
+        .tip.danger strong { color: var(--danger); }
+        .tip.success {
+            background: rgba(74, 222, 128, 0.08);
+            border-left-color: var(--success);
+        }
+        .tip.success strong { color: var(--success); }
+
+        /* EXPANDABLE */
+        .expandable { cursor: pointer; }
+        .expandable .card-title::after {
+            content: '›';
+            margin-left: auto;
+            font-size: 20px;
+            color: var(--text-dim);
+            transition: transform 0.3s;
+        }
+        .expandable.open .card-title::after {
+            transform: rotate(90deg);
+        }
+        .expandable .expand-content {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .expandable.open .expand-content { display: block; }
+
+        /* TABLE */
+        .info-table {
+            width: 100%;
+            font-size: 13px;
+            border-collapse: collapse;
+        }
+        .info-table td {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            vertical-align: top;
+        }
+        .info-table td:first-child {
+            color: var(--text-dim);
+            width: 40%;
+            padding-right: 12px;
+        }
+
+        /* BADGE */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge.gold { background: rgba(201,169,110,0.2); color: var(--accent); }
+        .badge.green { background: rgba(74,222,128,0.2); color: var(--success); }
+        .badge.red { background: rgba(248,113,113,0.2); color: var(--danger); }
+        .badge.blue { background: rgba(96,165,250,0.2); color: var(--blue); }
+
+        /* WORKFLOW STEPS */
+        .workflow-steps { counter-reset: step; }
+        .workflow-step {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 16px;
+            align-items: flex-start;
+        }
+        .step-num {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+        }
+        .step-content h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .step-content p {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        /* PROGRESS BAR */
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* VOICE COMMAND */
+        .voice-cmd {
+            background: rgba(96, 165, 250, 0.08);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .voice-cmd .cmd {
+            color: var(--blue);
+            font-weight: 600;
+        }
+        .voice-cmd .desc {
+            color: var(--text-dim);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        /* ZONE CARDS */
+        .zone-card {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .zone-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .zone-detail {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+        .zone-price {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 12px;
+            background: rgba(201,169,110,0.12);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* SEARCH */
+        .search-box {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 15px;
+            outline: none;
+            margin-bottom: 16px;
+        }
+        .search-box::placeholder { color: var(--text-dim); }
+        .search-wrap {
+            position: relative;
+        }
+        .search-wrap::before {
+            content: '🔍';
+            position: absolute;
+            left: 14px;
+            top: 12px;
+            font-size: 16px;
+        }
+
+        /* RESET BUTTON */
+        .reset-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            border-radius: 12px;
+            color: var(--danger);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* SHORTCUT CARD */
+        .shortcut-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #222240 100%);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(201,169,110,0.15);
+        }
+        .shortcut-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .shortcut-trigger {
+            font-size: 12px;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        .shortcut-desc {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <h1>DOMOVOY TOOLKIT</h1>
+    <p>iPhone 17 Pro + Ray-Ban Meta 2 — Phuket Real Estate</p>
+</div>
+
+<!-- ==================== PAGE: HOME ==================== -->
+<div class="page active" id="page-home">
+
+    <div class="section-header">Workflow du jour</div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">🌅</span> Routine Matin</div>
+        <div class="workflow-steps">
+            <div class="workflow-step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h4>Ray-Ban Meta 2 connectées</h4>
+                    <p>Mets les lunettes, vérifie la connexion Meta View sur l'iPhone</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h4>Brief quotidien</h4>
+                    <p>Météo Phuket, taux de change THB, visites du jour</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h4>Check GitHub</h4>
+                    <p>Issues et demandes de mise à jour du site Domovoy</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">🏠</span> Pendant la Visite</div>
+        <div class="workflow-steps">
+            <div class="workflow-step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h4>Ray-Ban Meta 2 — Vidéo POV</h4>
+                    <p>"Hey Meta, start recording" — visite mains libres à hauteur des yeux</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h4>iPhone — Photos 48MP</h4>
+                    <p>Hero shots en ProRAW, zoom 5x pour le toit, macro pour les finitions</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h4>iPhone — Scan LiDAR</h4>
+                    <p>Plan au sol avec Polycam ou RoomPlan, mesures exactes</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                    <h4>Wrap-up en partant</h4>
+                    <p>Sync les médias, notes vocales, créer la fiche propriété</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header">Taux de change</div>
+    <div class="stats-row">
+        <div class="stat-card" onclick="refreshRates()">
+            <div class="stat-number" id="rate-usd">~35</div>
+            <div class="stat-label">THB / USD</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="rate-eur">~38</div>
+            <div class="stat-label">THB / EUR</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="rate-gbp">~44</div>
+            <div class="stat-label">THB / GBP</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="rate-rub">~0.38</div>
+            <div class="stat-label">THB / RUB</div>
+        </div>
+    </div>
+
+    <div class="tip"><strong>Astuce :</strong> Ajoute cette page à ton écran d'accueil Safari → Partager → "Sur l'écran d'accueil" — elle s'ouvrira comme une vraie app, sans barre Safari.</div>
+
+</div>
+
+<!-- ==================== PAGE: IPHONE ==================== -->
+<div class="page" id="page-iphone">
+
+    <div class="section-header">Réglages Caméra</div>
+
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-title"><span class="icon">📸</span> Photos Hero (48MP ProRAW)</div>
+        <div class="expand-content">
+            <table class="info-table">
+                <tr><td>Format</td><td><strong>48MP ProRAW</strong><br>Réglages → Appareil photo → Formats</td></tr>
+                <tr><td>Objectif</td><td>Principal 48MP (1x)</td></tr>
+                <tr><td>HDR</td><td>ON (gère le soleil thaïlandais)</td></tr>
+                <tr><td>Grille</td><td>ON (aligner les murs)</td></tr>
+                <tr><td>Flash</td><td>OFF toujours</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-title"><span class="icon">🔭</span> Zoom 5x — Ton avantage</div>
+        <div class="expand-content">
+            <div class="card-text">Les autres agents ne peuvent pas voir ça sans échelle :</div>
+            <ul class="checklist" style="margin-top: 10px;">
+                <li><div class="check-box"></div><span class="check-text">État du toit depuis le sol</span></li>
+                <li><div class="check-box"></div><span class="check-text">Gouttières et drainage</span></li>
+                <li><div class="check-box"></div><span class="check-text">Joints des fenêtres en hauteur</span></li>
+                <li><div class="check-box"></div><span class="check-text">Fissures au plafond</span></li>
+                <li><div class="check-box"></div><span class="check-text">Finitions murs en hauteur</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-header">Shot List par Propriété</div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">🏡</span> Extérieur</div>
+        <ul class="checklist" data-group="exterior">
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Façade frontale, droit, à hauteur des yeux</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Portail / entrée</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Jardin / aménagement paysager</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Piscine (viser vers la maison)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Parking / garage</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Vue rue + quartier</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Vue (mer, montagne, coucher de soleil)</span></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">🛋️</span> Intérieur (par pièce)</div>
+        <ul class="checklist" data-group="interior">
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Plan large depuis la porte (ultra-wide 0.5x)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Photo du point fort (îlot, baignoire, rangements)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Fenêtre / vue depuis l'intérieur</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Détail finitions (plan de travail, robinetterie, sol)</span></li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">⚠️</span> Ne pas oublier</div>
+        <ul class="checklist" data-group="mustcapture">
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Chauffe-eau (marque, état)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Tableau électrique</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Climatiseurs (marque, âge)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Test pression eau (vidéo)</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Plafonds — traces d'eau</span></li>
+            <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Tout dommage / usure</span></li>
+        </ul>
+    </div>
+
+    <div class="section-header">LiDAR — Plans au Sol</div>
+
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-title"><span class="icon">📐</span> Comment scanner</div>
+        <div class="expand-content">
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Ouvrir Polycam</h4>
+                        <p>Mode "Room" pour un plan au sol propre</p>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Scanner pièce par pièce</h4>
+                        <p>Commence depuis la porte, marche lentement</p>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>Exporter en PDF</h4>
+                        <p>Plan côté, prêt à envoyer au client</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tip"><strong>Temps total :</strong> ~15-20 min pour une villa 3 chambres. Inclure les terrasses couvertes et les salas.</div>
+        </div>
+    </div>
+
+    <div class="section-header">Vidéo Spatiale</div>
+    <div class="tip success"><strong>Pour les familles à distance :</strong> Filme en spatial video (paysage). Le client visionne en 3D sur son iPhone ou Vision Pro. C'est comme s'il visitait lui-même. Différenciateur massif.</div>
+
+    <div class="section-header">Config iPhone</div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">⚡</span> Bouton Action</div>
+        <div class="card-text">Réglages → Bouton Action → Raccourci → "Property Quick Capture"<br><br>Un appui = ouvre la caméra en ProRAW → après les photos, organise automatiquement.</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">🔕</span> Mode Concentration "Visite"</div>
+        <div class="card-text">
+            Réglages → Concentration → + "Property Viewing"<br><br>
+            <strong>Autoriser :</strong> Contacts clients, Line, WhatsApp, appels répétés uniquement<br>
+            <strong>Bloquer :</strong> Tout le reste<br>
+            <strong>Auto :</strong> S'active quand tu ouvres l'appareil photo
+        </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetChecks()">Réinitialiser toutes les check-lists</button>
+</div>
+
+<!-- ==================== PAGE: GLASSES ==================== -->
+<div class="page" id="page-glasses">
+
+    <div class="section-header">Commandes vocales essentielles</div>
+
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Meta, start recording"</div>
+        <div class="desc">Lancer la vidéo walkthrough mains libres</div>
+    </div>
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Meta, take a photo"</div>
+        <div class="desc">Photo rapide sans sortir l'iPhone</div>
+    </div>
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Meta, take a note"</div>
+        <div class="desc">Note vocale pendant l'inspection</div>
+    </div>
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Meta, stop recording"</div>
+        <div class="desc">Arrêter la vidéo</div>
+    </div>
+
+    <div class="section-header">AI — Identifier sur le terrain</div>
+
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Meta, what kind of wood is this?"</div>
+        <div class="desc">Identifier le bois du sol ou des meubles</div>
+    </div>
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Meta, what brand is this?"</div>
+        <div class="desc">Identifier la marque d'un appareil / équipement</div>
+    </div>
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Meta, does this look like water damage?"</div>
+        <div class="desc">Analyser une tache au plafond ou au mur</div>
+    </div>
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Meta, what type of stone is this?"</div>
+        <div class="desc">Identifier un plan de travail, carrelage</div>
+    </div>
+    <div class="voice-cmd">
+        <div class="cmd">"Hey Meta, translate this sign"</div>
+        <div class="desc">Traduire un panneau en thaï</div>
+    </div>
+
+    <div class="section-header">Visite live pour clients à distance</div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">📡</span> Streaming en direct</div>
+        <div class="workflow-steps">
+            <div class="workflow-step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h4>Appel vidéo WhatsApp</h4>
+                    <p>Le client voit exactement ce que tu vois — immersion totale</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h4>Mains libres</h4>
+                    <p>Tu ouvres les portes, testes les robinets, tout en parlant</p>
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h4>Le client dirige</h4>
+                    <p>"Regarde à gauche", "Montre-moi le plafond" — interactif</p>
+                </div>
+            </div>
+        </div>
+        <div class="tip success"><strong>Impact :</strong> Les familles à Londres ou Moscou se sentent comme si elles visitaient. C'est comme ça qu'on signe une villa à 9 000 km.</div>
+    </div>
+
+    <div class="section-header">Lunettes vs iPhone — Quand utiliser quoi</div>
+
+    <div class="card">
+        <table class="info-table">
+            <tr><td>Vidéo walkthrough</td><td><span class="badge blue">Ray-Ban</span> POV naturel</td></tr>
+            <tr><td>Photos hero 48MP</td><td><span class="badge gold">iPhone</span> Qualité max</td></tr>
+            <tr><td>Visite live client</td><td><span class="badge blue">Ray-Ban</span> Immersion</td></tr>
+            <tr><td>Notes vocales</td><td><span class="badge blue">Ray-Ban</span> Mains libres</td></tr>
+            <tr><td>Mesures pièces</td><td><span class="badge gold">iPhone</span> LiDAR</td></tr>
+            <tr><td>Plans au sol</td><td><span class="badge gold">iPhone</span> Polycam</td></tr>
+            <tr><td>Nuit / basse lumière</td><td><span class="badge gold">iPhone</span> Night mode</td></tr>
+            <tr><td>Zoom détails</td><td><span class="badge gold">iPhone</span> 5x optique</td></tr>
+        </table>
+    </div>
+
+    <div class="section-header">Batterie</div>
+    <div class="card">
+        <div class="card-text">
+            <strong>Autonomie :</strong> ~4h mixte, ~2.5h vidéo intensive<br><br>
+            <strong>Règle :</strong> Charge pendant le déjeuner + pendant les trajets (étui dans la voiture)<br><br>
+            <strong>L'étui</strong> donne ~2 charges complètes supplémentaires
+        </div>
+    </div>
+
+    <div class="section-header">Respect en Thaïlande</div>
+    <div class="tip danger"><strong>Important :</strong> Toujours prévenir qu'on porte des lunettes avec caméra. Demander la permission : "Kor a-nu-yaat tai video dai mai krap?" (Puis-je filmer ?). Dans les temples : retirer ou éteindre.</div>
+
+</div>
+
+<!-- ==================== PAGE: INSPECT ==================== -->
+<div class="page" id="page-inspect">
+
+    <div class="section-header">Inspection — Score /120</div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">📊</span> Score actuel</div>
+        <div class="stat-number" id="inspect-score" style="font-size: 48px; text-align: center; padding: 10px 0;">0 / 120</div>
+        <div class="progress-bar"><div class="progress-fill" id="inspect-progress" style="width: 0%"></div></div>
+        <div id="inspect-rating" style="text-align: center; margin-top: 8px; font-size: 13px; color: var(--text-dim);">Commence l'inspection</div>
+    </div>
+
+    <div class="section-header">Structure & État</div>
+    <div class="card">
+        <div class="score-items" data-section="structure">
+            <div class="score-item">
+                <span>Toiture</span>
+                <div class="score-btns" data-key="roof"></div>
+            </div>
+            <div class="score-item">
+                <span>Murs extérieurs</span>
+                <div class="score-btns" data-key="walls"></div>
+            </div>
+            <div class="score-item">
+                <span>Fenêtres & portes</span>
+                <div class="score-btns" data-key="windows"></div>
+            </div>
+            <div class="score-item">
+                <span>Sols</span>
+                <div class="score-btns" data-key="floors"></div>
+            </div>
+            <div class="score-item">
+                <span>Plafonds</span>
+                <div class="score-btns" data-key="ceilings"></div>
+            </div>
+            <div class="score-item">
+                <span>Salle de bain</span>
+                <div class="score-btns" data-key="bathroom"></div>
+            </div>
+            <div class="score-item">
+                <span>Cuisine</span>
+                <div class="score-btns" data-key="kitchen"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header">Systèmes</div>
+    <div class="card">
+        <div class="score-items" data-section="systems">
+            <div class="score-item">
+                <span>Climatisation</span>
+                <div class="score-btns" data-key="ac"></div>
+            </div>
+            <div class="score-item">
+                <span>Eau chaude</span>
+                <div class="score-btns" data-key="hotwater"></div>
+            </div>
+            <div class="score-item">
+                <span>Électricité</span>
+                <div class="score-btns" data-key="electric"></div>
+            </div>
+            <div class="score-item">
+                <span>Plomberie</span>
+                <div class="score-btns" data-key="plumbing"></div>
+            </div>
+            <div class="score-item">
+                <span>Internet</span>
+                <div class="score-btns" data-key="internet"></div>
+            </div>
+            <div class="score-item">
+                <span>Signal mobile</span>
+                <div class="score-btns" data-key="mobile"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header">Extérieur</div>
+    <div class="card">
+        <div class="score-items" data-section="outdoor">
+            <div class="score-item">
+                <span>Piscine</span>
+                <div class="score-btns" data-key="pool"></div>
+            </div>
+            <div class="score-item">
+                <span>Jardin</span>
+                <div class="score-btns" data-key="garden"></div>
+            </div>
+            <div class="score-item">
+                <span>Parking</span>
+                <div class="score-btns" data-key="parking"></div>
+            </div>
+            <div class="score-item">
+                <span>Sécurité / clôture</span>
+                <div class="score-btns" data-key="security"></div>
+            </div>
+            <div class="score-item">
+                <span>Drainage</span>
+                <div class="score-btns" data-key="drainage"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header">Localisation</div>
+    <div class="card">
+        <div class="score-items" data-section="location">
+            <div class="score-item">
+                <span>Accès route</span>
+                <div class="score-btns" data-key="road"></div>
+            </div>
+            <div class="score-item">
+                <span>Distance école</span>
+                <div class="score-btns" data-key="school"></div>
+            </div>
+            <div class="score-item">
+                <span>Hôpital</span>
+                <div class="score-btns" data-key="hospital"></div>
+            </div>
+            <div class="score-item">
+                <span>Supermarché</span>
+                <div class="score-btns" data-key="supermarket"></div>
+            </div>
+            <div class="score-item">
+                <span>Niveau de bruit</span>
+                <div class="score-btns" data-key="noise"></div>
+            </div>
+            <div class="score-item">
+                <span>Voisinage</span>
+                <div class="score-btns" data-key="neighbors"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetInspection()">Nouvelle Inspection</button>
+</div>
+
+<!-- ==================== PAGE: THAILAND ==================== -->
+<div class="page" id="page-thailand">
+
+    <div class="section-header">Propriété étrangère</div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">🏢</span> Condo — Freehold possible</div>
+        <div class="card-text">
+            Les étrangers <strong>peuvent posséder</strong> un condo en pleine propriété.<br><br>
+            <span class="badge green">Quota 49%</span> de propriétaires étrangers par immeuble.<br><br>
+            Toujours vérifier le quota disponible auprès du bureau juridique AVANT de s'engager.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">🏡</span> Terrain & Maison — Interdit</div>
+        <div class="card-text">
+            Les étrangers <strong>ne peuvent PAS posséder</strong> de terrain en Thaïlande.
+        </div>
+        <table class="info-table" style="margin-top: 12px;">
+            <tr><td>Bail (Leasehold)</td><td>30 ans renouvelable <span class="badge gold">Recommandé</span></td></tr>
+            <tr><td>Société thaïe</td><td>Zone grise, courant mais risqué <span class="badge red">Attention</span></td></tr>
+            <tr><td>Conjoint thaï</td><td>Au nom du conjoint</td></tr>
+            <tr><td>Usufruit</td><td>Droit d'usage à vie</td></tr>
+        </table>
+    </div>
+
+    <div class="tip danger"><strong>Règle d'or :</strong> Toujours engager un avocat thaïlandais INDÉPENDANT (pas celui du vendeur).</div>
+
+    <div class="section-header">Titres de propriété</div>
+
+    <div class="card expandable" onclick="toggleExpand(this)">
+        <div class="card-title"><span class="icon">📜</span> Types de titres (du plus fort au plus faible)</div>
+        <div class="expand-content">
+            <table class="info-table">
+                <tr><td><span class="badge green">Chanote</span></td><td>Pleine propriété, GPS. <strong>C'est ce qu'il faut.</strong></td></tr>
+                <tr><td><span class="badge gold">Nor Sor 3 Gor</span></td><td>Bon. Peut être converti en Chanote.</td></tr>
+                <tr><td><span class="badge gold">Nor Sor 3</span></td><td>Moyen. Affichage 30 jours requis pour vente.</td></tr>
+                <tr><td><span class="badge red">Sor Kor 1</span></td><td>Faible. Notification de possession seulement.</td></tr>
+                <tr><td><span class="badge red">Por Bor Tor 5</span></td><td>Document fiscal UNIQUEMENT. Pas un titre.</td></tr>
+            </table>
+            <div class="tip" style="margin-top: 14px;"><strong>Vérification :</strong> Aller au Bureau des Terres local avec le vendeur. Recherche = 100-500 THB, 1-3 jours. <strong>Toujours le faire. Sans exception.</strong></div>
+        </div>
+    </div>
+
+    <div class="section-header">Zones de Phuket</div>
+
+    <div class="zone-card">
+        <div class="zone-name">Koh Kaew</div>
+        <div class="zone-detail">Près de BISP. Villas et lotissements. Famille, vert, calme.</div>
+        <div class="zone-price">35 000 - 120 000 THB/mois</div>
+    </div>
+    <div class="zone-card">
+        <div class="zone-name">Thalang / UWC</div>
+        <div class="zone-detail">Près de UWC et Thanyapura. Grands terrains, nature, sportif.</div>
+        <div class="zone-price">30 000 - 100 000 THB/mois</div>
+    </div>
+    <div class="zone-card">
+        <div class="zone-name">Cherng Talay / Bang Tao</div>
+        <div class="zone-detail">Laguna Phuket. Villas premium, plage. Hub expat.</div>
+        <div class="zone-price">40 000 - 250 000+ THB/mois</div>
+    </div>
+    <div class="zone-card">
+        <div class="zone-name">Kathu</div>
+        <div class="zone-detail">Central, pratique. Condos et villas. Moins touristique.</div>
+        <div class="zone-price">15 000 - 60 000 THB/mois</div>
+    </div>
+    <div class="zone-card">
+        <div class="zone-name">Chalong / Rawai</div>
+        <div class="zone-detail">Populaire Européens / Russes. Mix de tout. Yacht clubs.</div>
+        <div class="zone-price">15 000 - 80 000 THB/mois</div>
+    </div>
+    <div class="zone-card">
+        <div class="zone-name">Wichit / Phuket Town</div>
+        <div class="zone-detail">Le plus local et authentique. Condos, townhouses, marchés.</div>
+        <div class="zone-price">10 000 - 40 000 THB/mois</div>
+    </div>
+
+    <div class="section-header">Frais d'achat</div>
+    <div class="card">
+        <table class="info-table">
+            <tr><td>Frais de transfert</td><td>2% (souvent partagé 50/50)</td></tr>
+            <tr><td>Droit de timbre</td><td>0.5%</td></tr>
+            <tr><td>Taxe spéciale</td><td>3.3% (si détenu < 5 ans)</td></tr>
+            <tr><td>Retenue à la source</td><td>Taux progressif / 1% société</td></tr>
+        </table>
+    </div>
+
+    <div class="section-header">Saisons & Timing</div>
+    <div class="card">
+        <table class="info-table">
+            <tr><td>Haute saison</td><td><strong>Nov - Avr</strong><br>Prix au plus haut, meilleur temps</td></tr>
+            <tr><td>Basse saison</td><td><strong>Mai - Oct</strong><br>Meilleure négo, pluie</td></tr>
+            <tr><td>Pic mousson</td><td><strong>Sep - Oct</strong><br>Idéal pour tester les fuites !</td></tr>
+            <tr><td>Rentrée scolaire</td><td><strong>Août - Sep</strong><br>Pic de demande familles</td></tr>
+        </table>
+    </div>
+
+    <div class="section-header">Thaï utile sur le terrain</div>
+    <div class="card">
+        <table class="info-table">
+            <tr><td>Combien par mois ?</td><td><strong>Kee baht tor deuan?</strong></td></tr>
+            <tr><td>Je peux voir le Chanote ?</td><td><strong>Kor doo Chanote dai mai?</strong></td></tr>
+            <tr><td>C'est disponible quand ?</td><td><strong>Wang meu a meu rai?</strong></td></tr>
+            <tr><td>Le prix est négociable ?</td><td><strong>Lor ra-ka dai mai?</strong></td></tr>
+            <tr><td>Qui est le propriétaire ?</td><td><strong>Jao kong pen krai?</strong></td></tr>
+            <tr><td>Puis-je filmer ?</td><td><strong>Kor a-nu-yaat tai video dai mai?</strong></td></tr>
+        </table>
+    </div>
+
+</div>
+
+<!-- ==================== PAGE: SHORTCUTS ==================== -->
+<div class="page" id="page-shortcuts">
+
+    <div class="section-header">Raccourcis Siri — À construire</div>
+
+    <div class="tip"><strong>Comment :</strong> Ouvre l'app "Raccourcis" sur ton iPhone, crée un nouveau raccourci, et suis les étapes décrites pour chacun.</div>
+
+    <div class="shortcut-card">
+        <div class="shortcut-name">🌅 Brief Quotidien</div>
+        <div class="shortcut-trigger">"Dis Siri, property brief"</div>
+        <div class="shortcut-desc">Météo Phuket + taux de change THB + visites du jour dans le calendrier. Se lance auto à 6h30.</div>
+    </div>
+
+    <div class="shortcut-card">
+        <div class="shortcut-name">📸 Property Quick Capture</div>
+        <div class="shortcut-trigger">Bouton Action ou "Dis Siri, property capture"</div>
+        <div class="shortcut-desc">Demande le nom de la propriété → ouvre la caméra en ProRAW → après, crée un dossier et range les photos dedans.</div>
+    </div>
+
+    <div class="shortcut-card">
+        <div class="shortcut-name">✅ Property Wrap-Up</div>
+        <div class="shortcut-trigger">"Dis Siri, property wrap up"</div>
+        <div class="shortcut-desc">Compte les photos des 30 dernières min, rappelle de sync les Ray-Ban, crée un rappel pour traiter les médias.</div>
+    </div>
+
+    <div class="shortcut-card">
+        <div class="shortcut-name">📤 Envoyer Fiche Propriété</div>
+        <div class="shortcut-trigger">"Dis Siri, send property card"</div>
+        <div class="shortcut-desc">Sélectionne 5 meilleures photos + résumé → envoie par WhatsApp, Line ou Email au client.</div>
+    </div>
+
+    <div class="shortcut-card">
+        <div class="shortcut-name">💰 Log Dépense</div>
+        <div class="shortcut-trigger">"Dis Siri, log expense"</div>
+        <div class="shortcut-desc">Montant en THB + catégorie (Essence, Repas, Parking...) → ajouté au tableau de suivi mensuel.</div>
+    </div>
+
+    <div class="shortcut-card">
+        <div class="shortcut-name">🔄 Relance Client</div>
+        <div class="shortcut-trigger">"Dis Siri, follow up"</div>
+        <div class="shortcut-desc">Nom du client + dans combien de jours → crée un rappel avec message de relance pré-rédigé.</div>
+    </div>
+
+    <div class="shortcut-card">
+        <div class="shortcut-name">💱 Convertir en THB</div>
+        <div class="shortcut-trigger">"Dis Siri, convert to baht"</div>
+        <div class="shortcut-desc">Montant + devise → conversion live + équivalents loyers mensuels en devise client.</div>
+    </div>
+
+    <div class="shortcut-card">
+        <div class="shortcut-name">🚗 Timer Trajet École</div>
+        <div class="shortcut-trigger">"Dis Siri, school run"</div>
+        <div class="shortcut-desc">Chronomètre le trajet réel vers l'école. Données réelles > estimations Google Maps dans le trafic de Phuket.</div>
+    </div>
+
+    <div class="section-header">Tags NFC — Automatisations physiques</div>
+
+    <div class="card">
+        <div class="card-text">
+            Achète des tags NFC (~50 THB les 10). Programme-les dans Raccourcis → Automatisation → NFC :
+        </div>
+        <table class="info-table" style="margin-top: 12px;">
+            <tr><td>Tableau de bord voiture</td><td>Ouvre la navigation vers la prochaine visite</td></tr>
+            <tr><td>Clipboard de visite</td><td>Lance "Property Quick Capture"</td></tr>
+            <tr><td>Bureau</td><td>Lance le brief quotidien</td></tr>
+            <tr><td>Carte de visite</td><td>Ouvre WhatsApp/Line pour le client</td></tr>
+        </table>
+    </div>
+
+    <div class="section-header">Apps essentielles</div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">📱</span> iPhone — Must-Have</div>
+        <table class="info-table">
+            <tr><td>Meta View</td><td>Compagnon Ray-Ban, sync médias</td></tr>
+            <tr><td>Polycam</td><td>Scan LiDAR, plans 3D</td></tr>
+            <tr><td>Line</td><td>Communication Thaïlande (obligatoire)</td></tr>
+            <tr><td>GitHub</td><td>Gérer le site Domovoy</td></tr>
+            <tr><td>Halide / ProCamera</td><td>Contrôle caméra avancé</td></tr>
+            <tr><td>Google Translate</td><td>Pack thaï hors-ligne</td></tr>
+            <tr><td>XE Currency</td><td>Taux de change live</td></tr>
+            <tr><td>Wise</td><td>Transferts internationaux</td></tr>
+            <tr><td>Grab</td><td>Transport + livraison</td></tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span class="icon">🏘️</span> Immobilier Thaïlande</div>
+        <table class="info-table">
+            <tr><td>DDProperty</td><td>Portail immo thaï, données marché</td></tr>
+            <tr><td>FazWaz</td><td>Portail anglophone</td></tr>
+            <tr><td>Hipflat</td><td>Analytiques et tendances prix</td></tr>
+            <tr><td>Baania</td><td>Index prix terrains</td></tr>
+        </table>
+    </div>
+
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+    <button class="tab-item active" onclick="switchTab('home')">
+        <span class="tab-icon">🏠</span>
+        <span>Accueil</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('iphone')">
+        <span class="tab-icon">📱</span>
+        <span>iPhone</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('glasses')">
+        <span class="tab-icon">🕶️</span>
+        <span>Lunettes</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('inspect')">
+        <span class="tab-icon">📋</span>
+        <span>Inspection</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('thailand')">
+        <span class="tab-icon">🇹🇭</span>
+        <span>Thaïlande</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('shortcuts')">
+        <span class="tab-icon">⚡</span>
+        <span>Outils</span>
+    </button>
+</div>
+
+<script>
+    // TAB NAVIGATION
+    function switchTab(tabId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        document.getElementById('page-' + tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    // EXPANDABLE CARDS
+    function toggleExpand(el) {
+        el.classList.toggle('open');
+    }
+
+    // CHECKLISTS
+    function toggleCheck(li) {
+        li.classList.toggle('checked');
+        saveChecks();
+    }
+
+    function saveChecks() {
+        const state = {};
+        document.querySelectorAll('.checklist').forEach((list, i) => {
+            list.querySelectorAll('li').forEach((li, j) => {
+                state[i + '-' + j] = li.classList.contains('checked');
+            });
+        });
+        localStorage.setItem('domovoy-checks', JSON.stringify(state));
+    }
+
+    function loadChecks() {
+        const state = JSON.parse(localStorage.getItem('domovoy-checks') || '{}');
+        document.querySelectorAll('.checklist').forEach((list, i) => {
+            list.querySelectorAll('li').forEach((li, j) => {
+                if (state[i + '-' + j]) li.classList.add('checked');
+            });
+        });
+    }
+
+    function resetChecks() {
+        document.querySelectorAll('.checklist li').forEach(li => li.classList.remove('checked'));
+        localStorage.removeItem('domovoy-checks');
+    }
+
+    // INSPECTION SCORING
+    const inspectionScores = {};
+
+    function initScoring() {
+        document.querySelectorAll('.score-item').forEach(item => {
+            const btnsDiv = item.querySelector('.score-btns');
+            const key = btnsDiv.dataset.key;
+            btnsDiv.style.cssText = 'display:flex;gap:6px;margin-top:8px;';
+            item.style.cssText = 'padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);';
+            item.querySelector('span').style.cssText = 'font-size:14px;';
+
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.style.cssText = 'width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:var(--card);color:var(--text-dim);font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;';
+                btn.onclick = () => scoreItem(key, i, btnsDiv);
+                btnsDiv.appendChild(btn);
+            }
+        });
+        loadInspection();
+    }
+
+    function scoreItem(key, score, container) {
+        inspectionScores[key] = score;
+        container.querySelectorAll('button').forEach((btn, i) => {
+            if (i < score) {
+                btn.style.background = score >= 4 ? 'var(--success)' : score >= 3 ? 'var(--warning)' : 'var(--danger)';
+                btn.style.color = '#000';
+                btn.style.borderColor = 'transparent';
+            } else {
+                btn.style.background = 'var(--card)';
+                btn.style.color = 'var(--text-dim)';
+                btn.style.borderColor = 'rgba(255,255,255,0.1)';
+            }
+        });
+        updateInspectionTotal();
+        saveInspection();
+    }
+
+    function updateInspectionTotal() {
+        const total = Object.values(inspectionScores).reduce((a, b) => a + b, 0);
+        const max = 120;
+        const pct = Math.round((total / max) * 100);
+
+        document.getElementById('inspect-score').textContent = total + ' / ' + max;
+        document.getElementById('inspect-progress').style.width = pct + '%';
+
+        const fill = document.getElementById('inspect-progress');
+        if (total >= 100) { fill.style.background = 'var(--success)'; }
+        else if (total >= 80) { fill.style.background = 'var(--accent)'; }
+        else if (total >= 60) { fill.style.background = 'var(--warning)'; }
+        else { fill.style.background = 'var(--danger)'; }
+
+        const rating = document.getElementById('inspect-rating');
+        const counted = Object.keys(inspectionScores).length;
+        if (counted === 0) rating.textContent = 'Commence l\'inspection';
+        else if (total >= 100) rating.textContent = 'Exceptionnel — recommander immédiatement';
+        else if (total >= 80) rating.textContent = 'Solide — recommander avec notes mineures';
+        else if (total >= 60) rating.textContent = 'Acceptable — conditions / négociation';
+        else if (total >= 40) rating.textContent = 'Sous le standard — problèmes à régler';
+        else rating.textContent = 'Ne pas recommander';
+    }
+
+    function saveInspection() {
+        localStorage.setItem('domovoy-inspection', JSON.stringify(inspectionScores));
+    }
+
+    function loadInspection() {
+        const saved = JSON.parse(localStorage.getItem('domovoy-inspection') || '{}');
+        Object.entries(saved).forEach(([key, score]) => {
+            const btnsDiv = document.querySelector(`[data-key="${key}"]`);
+            if (btnsDiv) {
+                inspectionScores[key] = score;
+                btnsDiv.querySelectorAll('button').forEach((btn, i) => {
+                    if (i < score) {
+                        btn.style.background = score >= 4 ? 'var(--success)' : score >= 3 ? 'var(--warning)' : 'var(--danger)';
+                        btn.style.color = '#000';
+                        btn.style.borderColor = 'transparent';
+                    }
+                });
+            }
+        });
+        updateInspectionTotal();
+    }
+
+    function resetInspection() {
+        Object.keys(inspectionScores).forEach(k => delete inspectionScores[k]);
+        document.querySelectorAll('.score-btns button').forEach(btn => {
+            btn.style.background = 'var(--card)';
+            btn.style.color = 'var(--text-dim)';
+            btn.style.borderColor = 'rgba(255,255,255,0.1)';
+        });
+        localStorage.removeItem('domovoy-inspection');
+        updateInspectionTotal();
+    }
+
+    // INIT
+    loadChecks();
+    initScoring();
+</script>
+
+</body>
+</html>
