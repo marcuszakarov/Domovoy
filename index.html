@@ -1,340 +1,964 @@
 <!DOCTYPE html>
+
 <html lang="en" data-lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DOMOVOY — Family Housing for Phuket's International Schools</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--black:#1B1B1B;--gold:#C5A572;--gold-light:#D4BA8A;--warm-grey:#8C8279;--off-white:#F5F3EF;--white:#FFFFFF;--serif:'Cormorant Garamond',Georgia,serif;--sans:'Inter',-apple-system,sans-serif}
-html{scroll-behavior:smooth}
-body{font-family:var(--sans);color:var(--black);background:var(--white);line-height:1.6;font-weight:300;-webkit-font-smoothing:antialiased}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOMOVOY — Family Housing for Phuket's International Schools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #FAF8F5;
+      --warm-white: #F5F1EC;
+      --sand: #E8E0D5;
+      --taupe: #B8A99A;
+      --charcoal: #2C2824;
+      --dark: #1A1715;
+      --gold: #C4A265;
+      --gold-light: #D4B87A;
+      --sage: #8A9A7B;
+      --sage-light: #A8B89A;
+      --deep-teal: #2A4A4A;
+      --accent: #9B6B3D;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+    }
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:background .4s,padding .4s,box-shadow .4s}
-nav.scrolled{background:rgba(27,27,27,.95);padding:1rem 3rem;box-shadow:0 1px 20px rgba(0,0,0,.15);backdrop-filter:blur(10px)}
-.nav-logo{font-family:var(--serif);font-size:1.25rem;font-weight:500;letter-spacing:.35em;color:var(--gold);text-decoration:none}
-.nav-right{display:flex;align-items:center;gap:1.5rem}
-nav a.nav-link{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.7);text-decoration:none;transition:color .3s}
-nav a.nav-link:hover{color:var(--gold)}
+```
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
 
-/* LANG SWITCHER */
-.lang-sw{position:relative}
-.lang-btn{background:none;border:1px solid rgba(255,255,255,.15);color:var(--gold);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;padding:.4rem .8rem;cursor:pointer;font-family:var(--sans);font-weight:500;border-radius:2px;transition:border-color .3s}
-.lang-btn:hover{border-color:var(--gold)}
-.lang-dd{position:absolute;top:calc(100% + .5rem);right:0;background:rgba(27,27,27,.97);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08);min-width:130px;opacity:0;visibility:hidden;transform:translateY(-5px);transition:all .25s}
-.lang-sw.open .lang-dd{opacity:1;visibility:visible;transform:translateY(0)}
-.lang-dd button{display:block;width:100%;text-align:left;padding:.6rem 1rem;background:none;border:none;color:rgba(255,255,255,.6);font-size:.78rem;cursor:pointer;font-family:var(--sans);transition:all .2s}
-.lang-dd button:hover,.lang-dd button.active{color:var(--gold);background:rgba(255,255,255,.04)}
-
-/* HAMBURGER */
-.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
-.hamburger span{display:block;width:22px;height:1.5px;background:var(--gold);transition:all .3s}
-.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
-.hamburger.open span:nth-child(2){opacity:0}
-.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
-
-/* MOBILE MENU */
-.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(27,27,27,.98);z-index:99;flex-direction:column;justify-content:center;align-items:center;gap:2rem;opacity:0;transition:opacity .3s}
-.mobile-menu.open{display:flex;opacity:1}
-.mobile-menu a{font-family:var(--serif);font-size:1.6rem;color:var(--white);text-decoration:none;letter-spacing:.05em;transition:color .3s}
-.mobile-menu a:hover{color:var(--gold)}
-
-/* HERO */
-.hero{min-height:100vh;background:linear-gradient(165deg,#1B1B1B 0%,#2a2520 40%,#1B1B1B 100%);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 2rem;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 50%,rgba(197,165,114,.06) 0%,transparent 70%)}
-.hero-content{position:relative;z-index:1;max-width:800px}
-.hero-eyebrow{font-size:.7rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:2.5rem;font-weight:500}
-.hero h1{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.8rem);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:1.5rem}
-.hero h1 em{font-style:italic;color:var(--gold-light)}
-.hero p{font-size:1.05rem;color:rgba(255,255,255,.55);max-width:540px;margin:0 auto 3rem;line-height:1.8;font-weight:300}
-.scroll-cue{display:inline-flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.3);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:color .3s}
-.scroll-cue:hover{color:var(--gold)}
-.scroll-cue span{display:inline-block;animation:float 2s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
-
-/* SECTIONS */
-section{padding:7rem 2rem}
-.section-inner{max-width:1080px;margin:0 auto}
-.section-label{font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;font-weight:500}
-.section-title{font-family:var(--serif);font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:300;line-height:1.25;margin-bottom:1.5rem}
-.section-text{font-size:.95rem;color:var(--warm-grey);max-width:600px;line-height:1.85}
-
-/* CHALLENGE */
-.challenge{background:var(--off-white)}
-.challenge-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
-.challenge-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
-.challenge-stat{text-align:center;padding:3rem 2rem;background:var(--white);border-radius:2px}
-.challenge-stat .number{font-family:var(--serif);font-size:3.5rem;font-weight:300;color:var(--black);line-height:1;margin-bottom:.5rem}
-.challenge-stat .label{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--warm-grey)}
-
-/* APPROACH */
-.approach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3rem;margin-top:4rem}
-.approach-card{padding:2.5rem 0;border-top:1px solid rgba(197,165,114,.3)}
-.approach-card .card-num{font-family:var(--serif);font-size:2rem;color:var(--gold);font-weight:300;margin-bottom:1.5rem;opacity:.6}
-.approach-card h3{font-family:var(--serif);font-size:1.35rem;font-weight:400;margin-bottom:1rem}
-.approach-card p{font-size:.88rem;color:var(--warm-grey);line-height:1.8}
-
-/* COVERAGE */
-.coverage{background:var(--black);color:var(--white)}
-.coverage .section-title{color:var(--white)}
-.coverage .section-text{color:rgba(255,255,255,.45)}
-.zone-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;margin-top:4rem;background:rgba(255,255,255,.08)}
-.zone-card{padding:2rem 2.5rem;background:var(--black);transition:background .3s}
-.zone-card:hover{background:#232323}
-.zone-name{font-family:var(--serif);font-size:1.2rem;font-weight:400;margin-bottom:.4rem}
-.zone-schools{font-size:.8rem;color:var(--gold);margin-bottom:.8rem}
-.zone-meta{font-size:.78rem;color:rgba(255,255,255,.35);line-height:1.7}
-.zone-badge{display:inline-block;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .6rem;border:1px solid var(--gold);color:var(--gold);margin-top:.8rem;font-weight:500}
-
-/* FOR SCHOOLS */
-.for-schools{background:var(--off-white)}
-.schools-content{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;margin-top:3rem}
-.promise-list{list-style:none}
-.promise-list li{padding:1.2rem 0;border-bottom:1px solid rgba(140,130,121,.15);font-size:.92rem;line-height:1.7;display:flex;gap:1rem;align-items:baseline}
-.promise-list li::before{content:'—';color:var(--gold);font-weight:500;flex-shrink:0}
-.school-cta-box{background:var(--black);padding:3rem;color:var(--white)}
-.school-cta-box h3{font-family:var(--serif);font-size:1.6rem;font-weight:300;margin-bottom:1rem;line-height:1.3}
-.school-cta-box p{font-size:.88rem;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:2rem}
-
-/* BUTTONS */
-.btn-gold{display:inline-block;padding:.85rem 2.5rem;background:transparent;border:1px solid var(--gold);color:var(--gold);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;font-family:var(--sans);font-weight:500;transition:background .3s,color .3s}
-.btn-gold:hover{background:var(--gold);color:var(--black)}
-
-/* TRUST */
-.trust{text-align:center;padding:5rem 2rem;border-top:1px solid rgba(140,130,121,.12)}
-.trust-quote{font-family:var(--serif);font-size:clamp(1.3rem,2.5vw,1.8rem);font-weight:300;font-style:italic;color:var(--warm-grey);max-width:700px;margin:0 auto 1.5rem;line-height:1.5}
-.trust-attr{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(140,130,121,.5)}
-
-/* CONTACT */
-.contact{background:var(--black);color:var(--white);text-align:center;padding:6rem 2rem}
-.contact .section-title{color:var(--white)}
-.contact-subtitle{font-size:.95rem;color:rgba(255,255,255,.4);margin-bottom:3rem;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.8}
-.contact-channels{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;margin-bottom:3rem}
-.contact-item .ch-label{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.5rem}
-.contact-item .ch-value{font-family:var(--serif);font-size:1.1rem}
-.contact-item a{color:var(--gold-light);text-decoration:none;transition:color .3s}
-.contact-item a:hover{color:var(--white)}
-.contact-languages{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-top:2rem}
-
-/* FOOTER */
-footer{background:var(--black);border-top:1px solid rgba(255,255,255,.06);padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center}
-footer .f-brand{font-family:var(--serif);font-size:.85rem;letter-spacing:.2em;color:rgba(255,255,255,.25)}
-footer .f-legal{font-size:.65rem;color:rgba(255,255,255,.15)}
-
-/* FADE-IN */
-.fade-in{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s ease}
-.fade-in.visible{opacity:1;transform:translateY(0)}
-
-/* RESPONSIVE */
-@media(max-width:768px){
-  nav{padding:1.2rem 1.5rem}
-  nav.scrolled{padding:.8rem 1.5rem}
-  .nav-links-desk{display:none}
-  .hamburger{display:flex}
-  section{padding:4.5rem 1.5rem}
-  .challenge-grid{grid-template-columns:1fr;gap:2.5rem}
-  .approach-grid{grid-template-columns:1fr;gap:0}
-  .zone-grid{grid-template-columns:1fr}
-  .schools-content{grid-template-columns:1fr;gap:2.5rem}
-  .school-cta-box{padding:2rem}
-  .contact-channels{flex-direction:column;gap:2rem}
-  footer{flex-direction:column;gap:.8rem;text-align:center;padding:2rem 1.5rem}
-  .hero{padding:5rem 1.5rem}
-  .hero p{font-size:.95rem}
+body {
+  font-family: var(--font-body);
+  color: var(--charcoal);
+  background: var(--cream);
+  line-height: 1.7;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
 }
-</style>
+
+/* ===================== NAVIGATION ===================== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1.2rem 2rem;
+  transition: all 0.4s ease;
+  background: transparent;
+}
+nav.scrolled {
+  background: rgba(250, 248, 245, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.5rem; font-weight: 500;
+  letter-spacing: 0.15em; color: var(--charcoal);
+  text-decoration: none;
+}
+nav.hero-nav .nav-logo { color: #fff; }
+nav.scrolled .nav-logo { color: var(--charcoal); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  color: var(--charcoal); text-decoration: none;
+  font-size: 0.82rem; font-weight: 400;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  opacity: 0.7; transition: opacity 0.3s;
+}
+.nav-links a:hover { opacity: 1; }
+nav.hero-nav .nav-links a { color: #fff; }
+nav.scrolled .nav-links a { color: var(--charcoal); }
+
+.lang-switch {
+  font-size: 0.75rem; letter-spacing: 0.1em;
+  color: var(--charcoal); opacity: 0.6;
+  cursor: pointer; background: none; border: none;
+  font-family: var(--font-body);
+}
+nav.hero-nav .lang-switch { color: #fff; }
+nav.scrolled .lang-switch { color: var(--charcoal); }
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+}
+
+/* ===================== HERO ===================== */
+.hero {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1609220136736-443140cffec6?w=1600&q=80') center/cover no-repeat;
+  filter: brightness(0.45);
+}
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(26,23,21,0.3) 0%, rgba(26,23,21,0.5) 50%, rgba(26,23,21,0.8) 100%);
+}
+.hero-content {
+  position: relative; z-index: 2;
+  text-align: center; color: #fff;
+  padding: 2rem; max-width: 900px;
+}
+.hero-badge {
+  display: inline-block;
+  font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 0.5rem 1.5rem; margin-bottom: 2.5rem;
+  color: rgba(255,255,255,0.8); font-weight: 400;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 300; line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+.hero h1 em {
+  font-style: italic; color: var(--gold-light);
+}
+.hero-sub {
+  font-size: 1.05rem; font-weight: 300;
+  color: rgba(255,255,255,0.75);
+  max-width: 600px; margin: 0 auto 2.5rem;
+  line-height: 1.8;
+}
+.hero-cta {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background: var(--gold);
+  color: #fff; text-decoration: none;
+  font-size: 0.8rem; letter-spacing: 0.15em;
+  text-transform: uppercase; font-weight: 500;
+  transition: all 0.3s;
+}
+.hero-cta:hover { background: var(--gold-light); }
+
+.hero-scroll {
+  position: absolute; bottom: 2.5rem;
+  left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,0.5);
+  font-size: 0.7rem; letter-spacing: 0.2em;
+  text-transform: uppercase; text-decoration: none;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+/* ===================== TRUST STRIP ===================== */
+.trust-strip {
+  background: var(--charcoal);
+  padding: 3rem 2rem;
+}
+.trust-inner {
+  max-width: 1000px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1rem; text-align: center;
+}
+.trust-item .trust-num {
+  font-family: var(--font-display);
+  font-size: 2.5rem; font-weight: 300;
+  color: var(--gold); display: block;
+}
+.trust-item .trust-label {
+  font-size: 0.72rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(255,255,255,0.5);
+  margin-top: 0.3rem;
+}
+@media (max-width: 600px) {
+  .trust-inner { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+}
+
+/* ===================== SECTIONS ===================== */
+section { padding: 6rem 2rem; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+
+.section-label {
+  font-size: 0.7rem; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--taupe);
+  margin-bottom: 1rem; font-weight: 500;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300; line-height: 1.25;
+  margin-bottom: 1.5rem; color: var(--dark);
+}
+.section-desc {
+  font-size: 1rem; color: var(--taupe);
+  max-width: 600px; line-height: 1.8;
+}
+
+/* ===================== CHALLENGE / STORY ===================== */
+.challenge {
+  background: var(--warm-white);
+}
+.challenge-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: center;
+  margin-top: 3rem;
+}
+.challenge-img {
+  position: relative; overflow: hidden;
+  border-radius: 2px;
+  aspect-ratio: 4/5;
+}
+.challenge-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.8s ease;
+}
+.challenge-img:hover img { transform: scale(1.03); }
+.challenge-img .img-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.6));
+  padding: 2rem 1.5rem 1.2rem;
+  color: rgba(255,255,255,0.8);
+  font-size: 0.78rem; letter-spacing: 0.05em;
+  font-style: italic;
+}
+.challenge-text h3 {
+  font-family: var(--font-display);
+  font-size: 1.8rem; font-weight: 400;
+  margin-bottom: 1.5rem; line-height: 1.35;
+  color: var(--dark);
+}
+.challenge-text p {
+  margin-bottom: 1.2rem; color: #6B6360;
+  font-size: 0.95rem; line-height: 1.85;
+}
+@media (max-width: 768px) {
+  .challenge-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ===================== APPROACH ===================== */
+.approach-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; margin-top: 3rem;
+}
+.approach-card {
+  background: #fff;
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--sand);
+  transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+.approach-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+}
+.approach-card .card-num {
+  font-family: var(--font-display);
+  font-size: 3rem; font-weight: 300;
+  color: var(--sand); line-height: 1;
+  margin-bottom: 1.2rem;
+}
+.approach-card h4 {
+  font-family: var(--font-display);
+  font-size: 1.3rem; font-weight: 400;
+  margin-bottom: 1rem; color: var(--dark);
+}
+.approach-card p {
+  font-size: 0.88rem; color: #8A8380;
+  line-height: 1.8;
+}
+@media (max-width: 768px) {
+  .approach-cards { grid-template-columns: 1fr; }
+}
+
+/* ===================== LIFESTYLE VISUAL BREAK ===================== */
+.visual-break {
+  padding: 0; position: relative;
+  height: 70vh; min-height: 450px;
+  overflow: hidden;
+}
+.visual-break-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  height: 100%;
+}
+.vb-panel {
+  position: relative; overflow: hidden;
+}
+.vb-panel img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.8s ease;
+}
+.vb-panel:hover img { transform: scale(1.05); }
+.vb-panel .vb-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  padding: 3rem 1.5rem 1.5rem;
+  color: #fff;
+}
+.vb-label span {
+  display: block; font-size: 0.65rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold-light); margin-bottom: 0.4rem;
+}
+.vb-label strong {
+  font-family: var(--font-display);
+  font-size: 1.3rem; font-weight: 400;
+}
+@media (max-width: 768px) {
+  .visual-break { height: auto; min-height: unset; }
+  .visual-break-grid { grid-template-columns: 1fr; }
+  .vb-panel { height: 50vw; }
+}
+
+/* ===================== COVERAGE / ZONES ===================== */
+.coverage { background: var(--warm-white); }
+.zone-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem; margin-top: 3rem;
+}
+.zone-card {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  background: #fff;
+  border: 1px solid var(--sand);
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.zone-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+}
+.zone-thumb {
+  overflow: hidden;
+}
+.zone-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover; transition: transform 0.6s;
+}
+.zone-card:hover .zone-thumb img { transform: scale(1.08); }
+.zone-info {
+  padding: 1.5rem;
+}
+.zone-info h4 {
+  font-family: var(--font-display);
+  font-size: 1.15rem; font-weight: 500;
+  color: var(--dark); margin-bottom: 0.3rem;
+}
+.zone-schools {
+  font-size: 0.75rem; color: var(--gold);
+  letter-spacing: 0.05em; margin-bottom: 0.6rem;
+  font-weight: 500;
+}
+.zone-meta {
+  font-size: 0.78rem; color: #9A9490;
+  line-height: 1.6;
+}
+.zone-badge {
+  display: inline-block;
+  font-size: 0.6rem; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--deep-teal); color: #fff;
+  padding: 0.2rem 0.6rem; margin-top: 0.6rem;
+  font-weight: 500;
+}
+.zone-card.featured {
+  grid-column: span 2;
+  grid-template-columns: 250px 1fr;
+}
+@media (max-width: 768px) {
+  .zone-grid { grid-template-columns: 1fr; }
+  .zone-card { grid-template-columns: 100px 1fr; }
+  .zone-card.featured { grid-column: span 1; grid-template-columns: 100px 1fr; }
+}
+
+/* ===================== SCHOOLS VISUAL SHOWCASE ===================== */
+.schools-showcase {
+  background: var(--dark);
+  color: #fff;
+  padding: 6rem 2rem;
+}
+.showcase-header {
+  text-align: center; margin-bottom: 4rem;
+}
+.showcase-header .section-label { color: var(--gold); }
+.showcase-header .section-title { color: #fff; }
+.showcase-header .section-desc { color: rgba(255,255,255,0.5); margin: 0 auto; }
+.schools-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem; max-width: 1100px; margin: 0 auto;
+}
+.school-tile {
+  position: relative; overflow: hidden;
+  aspect-ratio: 3/4;
+  cursor: pointer;
+}
+.school-tile img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.6s, filter 0.6s;
+  filter: brightness(0.7);
+}
+.school-tile:hover img {
+  transform: scale(1.06);
+  filter: brightness(0.9);
+}
+.school-tile .tile-info {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 2rem 1.2rem 1.2rem;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+}
+.tile-info .tile-zone {
+  font-size: 0.6rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold-light);
+  margin-bottom: 0.3rem;
+}
+.tile-info .tile-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-weight: 400;
+}
+.tile-info .tile-type {
+  font-size: 0.72rem; color: rgba(255,255,255,0.5);
+  margin-top: 0.2rem;
+}
+@media (max-width: 768px) {
+  .schools-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===================== FOR SCHOOLS SECTION ===================== */
+.for-schools { background: var(--cream); }
+.fs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: center;
+  margin-top: 3rem;
+}
+.fs-img {
+  aspect-ratio: 5/4; overflow: hidden;
+  border-radius: 2px;
+}
+.fs-img img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.fs-points { list-style: none; }
+.fs-points li {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--sand);
+  font-size: 0.9rem; color: #6B6360;
+  line-height: 1.7;
+  padding-left: 1.5rem;
+  position: relative;
+}
+.fs-points li::before {
+  content: '';
+  position: absolute; left: 0; top: 1.35rem;
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+@media (max-width: 768px) {
+  .fs-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ===================== TESTIMONIAL ===================== */
+.testimonial {
+  position: relative;
+  min-height: 60vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.testimonial-bg {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80') center/cover no-repeat;
+  filter: brightness(0.3);
+}
+.testimonial-content {
+  position: relative; z-index: 2;
+  text-align: center; color: #fff;
+  padding: 3rem 2rem; max-width: 750px;
+}
+.testimonial-content blockquote {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 300; font-style: italic;
+  line-height: 1.5; margin-bottom: 2rem;
+  color: rgba(255,255,255,0.9);
+}
+.testimonial-content cite {
+  font-style: normal;
+  font-size: 0.75rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--gold-light);
+}
+
+/* ===================== CONTACT ===================== */
+.contact {
+  background: var(--charcoal);
+  color: #fff;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: start;
+  margin-top: 3rem;
+}
+.contact .section-title { color: #fff; }
+.contact .section-desc { color: rgba(255,255,255,0.45); }
+.contact-methods { display: flex; flex-direction: column; gap: 1.5rem; }
+.contact-method {
+  display: block; text-decoration: none;
+  padding: 1.5rem 2rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.3s;
+}
+.contact-method:hover {
+  border-color: var(--gold);
+  background: rgba(255,255,255,0.03);
+}
+.contact-method .cm-label {
+  font-size: 0.65rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 0.4rem;
+}
+.contact-method .cm-value {
+  font-family: var(--font-display);
+  font-size: 1.3rem; color: #fff; font-weight: 400;
+}
+.contact-langs {
+  margin-top: 2rem;
+  font-size: 0.75rem; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.3);
+}
+@media (max-width: 768px) {
+  .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ===================== FOOTER ===================== */
+footer {
+  background: var(--dark);
+  padding: 2rem;
+  text-align: center;
+  color: rgba(255,255,255,0.25);
+  font-size: 0.75rem; letter-spacing: 0.05em;
+}
+footer .foot-logo {
+  font-family: var(--font-display);
+  font-size: 1.1rem; letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 0.5rem;
+}
+
+/* ===================== ANIMATIONS ===================== */
+.fade-in {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-in.visible {
+  opacity: 1; transform: translateY(0);
+}
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+```
+
+  </style>
 </head>
 <body>
 
-<nav id="nav">
-  <a href="#" class="nav-logo">DOMOVOY</a>
-  <div class="nav-right">
-    <div class="nav-links-desk">
-      <a href="#approach" class="nav-link" data-i18n="nav_approach">Approach</a>
-      <a href="#coverage" class="nav-link" data-i18n="nav_coverage">Coverage</a>
-      <a href="#schools" class="nav-link" data-i18n="nav_schools">For Schools</a>
-      <a href="#contact" class="nav-link" data-i18n="nav_contact">Contact</a>
-    </div>
-    <div class="lang-sw" id="langSw">
-      <button class="lang-btn" id="langBtn">EN</button>
-      <div class="lang-dd">
-        <button class="active" data-lang="en">English</button>
-        <button data-lang="fr">Français</button>
-        <button data-lang="ru">Русский</button>
-        <button data-lang="th">ไทย</button>
-        <button data-lang="zh">中文</button>
-      </div>
-    </div>
-    <button class="hamburger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+<!-- ==================== NAVIGATION ==================== -->
+
+<nav id="navbar" class="hero-nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">DOMOVOY</a>
+    <ul class="nav-links">
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#coverage">Coverage</a></li>
+      <li><a href="#schools">Schools</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="lang-switch" id="langSwitch">EN</button>
   </div>
 </nav>
 
-<div class="mobile-menu" id="mobMenu">
-  <a href="#approach" data-i18n="nav_approach">Approach</a>
-  <a href="#coverage" data-i18n="nav_coverage">Coverage</a>
-  <a href="#schools" data-i18n="nav_schools">For Schools</a>
-  <a href="#contact" data-i18n="nav_contact">Contact</a>
+<!-- ==================== HERO ==================== -->
+
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Phuket Family Housing</div>
+    <h1>Helping Families Settle<br>Near the <em>Right School</em></h1>
+    <p class="hero-sub">Curated housing solutions for families relocating to Phuket's international school community. Verified properties, local expertise, zero pressure.</p>
+    <a href="#approach" class="hero-cta">Discover Our Approach</a>
+  </div>
+  <a href="#challenge" class="hero-scroll">Scroll ↓</a>
+</section>
+
+<!-- ==================== TRUST STRIP ==================== -->
+
+<div class="trust-strip">
+  <div class="trust-inner">
+    <div class="trust-item fade-in">
+      <span class="trust-num">18</span>
+      <div class="trust-label">International Schools</div>
+    </div>
+    <div class="trust-item fade-in delay-1">
+      <span class="trust-num">370+</span>
+      <div class="trust-label">Verified Properties</div>
+    </div>
+    <div class="trust-item fade-in delay-2">
+      <span class="trust-num">12</span>
+      <div class="trust-label">Zones Covered</div>
+    </div>
+    <div class="trust-item fade-in delay-3">
+      <span class="trust-num">5</span>
+      <div class="trust-label">Languages Spoken</div>
+    </div>
+  </div>
 </div>
 
-<section class="hero">
-  <div class="hero-content fade-in">
-    <div class="hero-eyebrow" data-i18n="hero_eyebrow">Phuket Family Housing</div>
-    <h1 data-i18n="hero_title">Helping Families Settle<br>Near the <em>Right School</em></h1>
-    <p data-i18n="hero_text">Curated housing solutions for families relocating to Phuket's international school community. Verified properties, local expertise, zero pressure.</p>
-    <a href="#challenge" class="scroll-cue"><span data-i18n="hero_cta">Discover more</span> <span>↓</span></a>
-  </div>
-</section>
+<!-- ==================== CHALLENGE ==================== -->
 
 <section class="challenge" id="challenge">
   <div class="section-inner">
+    <div class="section-label fade-in">The Challenge</div>
+    <div class="section-title fade-in">Families choose the school first.<br>The home comes second.</div>
     <div class="challenge-grid">
-      <div class="fade-in">
-        <div class="section-label" data-i18n="challenge_label">The Challenge</div>
-        <h2 class="section-title" data-i18n="challenge_title">Families choose the school first.<br>The home comes second.</h2>
-        <p class="section-text" data-i18n="challenge_p1">Every year, hundreds of families relocate to Phuket for its international schools. They face a fragmented rental market, unverified listings, language barriers, and agents who don't understand what "near the school" actually means for a family's daily life.</p>
-        <p class="section-text" style="margin-top:1rem" data-i18n="challenge_p2">We built Domovoy to solve this. Starting from the school your family has chosen, we match you with verified, family-suitable properties — in the right zone, at the right price, with transparent terms.</p>
+      <div class="challenge-img fade-in">
+        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80" alt="Family arriving in tropical setting" loading="lazy">
+        <div class="img-caption">A new chapter begins — finding the right home near the right school</div>
       </div>
-      <div class="challenge-stats fade-in">
-        <div class="challenge-stat"><div class="number">18</div><div class="label" data-i18n="stat_schools">International schools</div></div>
-        <div class="challenge-stat"><div class="number">370<span style="font-size:1.5rem">+</span></div><div class="label" data-i18n="stat_props">Verified properties</div></div>
-        <div class="challenge-stat"><div class="number">12</div><div class="label" data-i18n="stat_zones">Zones covered</div></div>
-        <div class="challenge-stat"><div class="number">5</div><div class="label" data-i18n="stat_langs">Languages spoken</div></div>
+      <div class="challenge-text fade-in delay-1">
+        <h3>Relocating a family is more than finding four walls.</h3>
+        <p>Every year, hundreds of families relocate to Phuket for its international schools. They face a fragmented rental market, unverified listings, language barriers, and agents who don't understand what "near the school" actually means for a family's daily life.</p>
+        <p>The morning commute. The after-school activities. The weekend routine. The neighbourhood your children will call home. These details matter — and they're exactly what generic property platforms ignore.</p>
+        <p>We built Domovoy to solve this. Starting from the school your family has chosen, we match you with verified, family-suitable properties — in the right zone, at the right price, with transparent terms.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section id="approach">
+<!-- ==================== APPROACH ==================== -->
+
+<section class="approach" id="approach">
   <div class="section-inner">
-    <div class="fade-in">
-      <div class="section-label" data-i18n="approach_label">Our Approach</div>
-      <h2 class="section-title" data-i18n="approach_title">School-first. Family-first.<br>Always.</h2>
-      <p class="section-text" data-i18n="approach_text">We don't start with the property. We start with where your children will learn — and build everything around that.</p>
-    </div>
-    <div class="approach-grid">
-      <div class="approach-card fade-in"><div class="card-num">01</div><h3 data-i18n="card1_title">School-First Matching</h3><p data-i18n="card1_text">Tell us which school your family has chosen. We map every verified property within a 15-minute radius — houses, villas, condominiums — filtered by your family size, budget, and lifestyle preferences.</p></div>
-      <div class="approach-card fade-in"><div class="card-num">02</div><h3 data-i18n="card2_title">Verified Properties Only</h3><p data-i18n="card2_text">Every property in our inventory has been visited. Every owner has been identified and contacted directly. Every lease term has been reviewed. No middlemen, no surprises, no hidden fees.</p></div>
-      <div class="approach-card fade-in"><div class="card-num">03</div><h3 data-i18n="card3_title">Multilingual Support</h3><p data-i18n="card3_text">Our team operates in English, French, Russian, Thai, and Chinese. Every family communicates in their own language — from the first enquiry through to move-in day and beyond.</p></div>
+    <div class="section-label fade-in">Our Approach</div>
+    <div class="section-title fade-in">School-first. Family-first. Always.</div>
+    <p class="section-desc fade-in">We don't start with the property. We start with where your children will learn — and build everything around that.</p>
+    <div class="approach-cards">
+      <div class="approach-card fade-in">
+        <div class="card-num">01</div>
+        <h4>School-First Matching</h4>
+        <p>Tell us which school your family has chosen. We map every verified property within a 15-minute radius — houses, villas, condominiums — filtered by your family size, budget, and lifestyle preferences.</p>
+      </div>
+      <div class="approach-card fade-in delay-1">
+        <div class="card-num">02</div>
+        <h4>Verified Properties Only</h4>
+        <p>Every property in our inventory has been visited. Every owner has been identified and contacted directly. Every lease term has been reviewed. No middlemen, no surprises, no hidden fees.</p>
+      </div>
+      <div class="approach-card fade-in delay-2">
+        <div class="card-num">03</div>
+        <h4>Multilingual Support</h4>
+        <p>Our team operates in English, French, Russian, Thai, and Chinese. Every family communicates in their own language — from the first enquiry through to move-in day and beyond.</p>
+      </div>
     </div>
   </div>
 </section>
+
+<!-- ==================== VISUAL BREAK — LIFESTYLE ==================== -->
+
+<div class="visual-break">
+  <div class="visual-break-grid">
+    <div class="vb-panel">
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="Luxury villa with pool in Phuket" loading="lazy">
+      <div class="vb-label">
+        <span>Lifestyle</span>
+        <strong>Private villas with pools</strong>
+      </div>
+    </div>
+    <div class="vb-panel">
+      <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80" alt="International school classroom" loading="lazy">
+      <div class="vb-label">
+        <span>Education</span>
+        <strong>World-class learning</strong>
+      </div>
+    </div>
+    <div class="vb-panel">
+      <img src="https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?w=800&q=80" alt="Tropical family life" loading="lazy">
+      <div class="vb-label">
+        <span>Community</span>
+        <strong>A life families love</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== COVERAGE ==================== -->
 
 <section class="coverage" id="coverage">
   <div class="section-inner">
-    <div class="fade-in">
-      <div class="section-label" data-i18n="coverage_label">Coverage</div>
-      <h2 class="section-title" data-i18n="coverage_title">Every school zone. Every price range.</h2>
-      <p class="section-text" data-i18n="coverage_text">We maintain a live inventory across Phuket's key residential zones, matched to the international schools families choose most.</p>
+    <div class="section-label fade-in">Coverage</div>
+    <div class="section-title fade-in">Every school zone. Every price range.</div>
+    <p class="section-desc fade-in">We maintain a live inventory across Phuket's key residential zones, matched to the international schools families choose most.</p>
+    <div class="zone-grid">
+
+```
+  <div class="zone-card featured fade-in">
+    <div class="zone-thumb">
+      <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&q=80" alt="Koh Kaew villa" loading="lazy">
     </div>
-    <div class="zone-grid fade-in">
-      <div class="zone-card"><div class="zone-name">Koh Kaew</div><div class="zone-schools">BISP · Finnway</div><div class="zone-meta">179 properties · Houses &amp; villas<br>30,000 – 150,000 THB/month</div><div class="zone-badge">Priority Zone</div></div>
-      <div class="zone-card"><div class="zone-name">Thalang · Pa Khlok</div><div class="zone-schools">UWC Thailand · Glenalmond 2026 · HEI Schools</div><div class="zone-meta">50+ properties · Villas &amp; gated estates<br>35,000 – 200,000 THB/month</div></div>
-      <div class="zone-card"><div class="zone-name">Cherng Talay · Bang Tao</div><div class="zone-schools">HeadStart · Rassvet</div><div class="zone-meta">40+ properties · Villas &amp; resort condos<br>25,000 – 400,000 THB/month</div></div>
-      <div class="zone-card"><div class="zone-name">Kathu</div><div class="zone-schools">QSI · Kajonkiet</div><div class="zone-meta">20+ properties · Houses &amp; condos<br>15,000 – 50,000 THB/month</div></div>
-      <div class="zone-card"><div class="zone-name">Wichit</div><div class="zone-schools">HeadStart City · Rainbow Montessori</div><div class="zone-meta">70+ properties · Condos &amp; townhouses<br>15,000 – 60,000 THB/month</div></div>
-      <div class="zone-card"><div class="zone-name">Chalong</div><div class="zone-schools">Oak Meadow · Buds · BCIS · Montessori House</div><div class="zone-meta">20+ properties · Houses &amp; villas<br>18,000 – 200,000 THB/month</div></div>
-      <div class="zone-card"><div class="zone-name">Rawai · Nai Harn</div><div class="zone-schools">ISP · Lighthouse · École Française</div><div class="zone-meta">34+ properties · Villas &amp; condos<br>22,000 – 200,000 THB/month</div></div>
-      <div class="zone-card"><div class="zone-name" data-i18n="zone_island">Island-wide</div><div class="zone-schools" data-i18n="zone_island_schools">All 18 international schools covered</div><div class="zone-meta" data-i18n="zone_island_meta">164 residential communities mapped<br>Direct-owner contacts verified</div><div class="zone-badge">Full Coverage</div></div>
+    <div class="zone-info">
+      <h4>Koh Kaew</h4>
+      <div class="zone-schools">BISP · Finnway</div>
+      <div class="zone-meta">179 properties · Houses & villas<br>30,000 – 150,000 THB/month</div>
+      <div class="zone-badge">Priority Zone</div>
     </div>
+  </div>
+
+  <div class="zone-card fade-in">
+    <div class="zone-thumb">
+      <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=80" alt="Thalang estate" loading="lazy">
+    </div>
+    <div class="zone-info">
+      <h4>Thalang · Pa Khlok</h4>
+      <div class="zone-schools">UWC Thailand · Glenalmond 2026</div>
+      <div class="zone-meta">50+ properties · Villas & gated estates<br>35,000 – 200,000 THB/month</div>
+    </div>
+  </div>
+
+  <div class="zone-card fade-in delay-1">
+    <div class="zone-thumb">
+      <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400&q=80" alt="Bang Tao resort" loading="lazy">
+    </div>
+    <div class="zone-info">
+      <h4>Cherng Talay · Bang Tao</h4>
+      <div class="zone-schools">HeadStart · Rassvet</div>
+      <div class="zone-meta">40+ properties · Villas & resort condos<br>25,000 – 400,000 THB/month</div>
+    </div>
+  </div>
+
+  <div class="zone-card fade-in delay-2">
+    <div class="zone-thumb">
+      <img src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=400&q=80" alt="Kathu house" loading="lazy">
+    </div>
+    <div class="zone-info">
+      <h4>Kathu</h4>
+      <div class="zone-schools">QSI · Kajonkiet</div>
+      <div class="zone-meta">20+ properties · Houses & condos<br>15,000 – 50,000 THB/month</div>
+    </div>
+  </div>
+
+  <div class="zone-card fade-in delay-3">
+    <div class="zone-thumb">
+      <img src="https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=400&q=80" alt="Wichit condo" loading="lazy">
+    </div>
+    <div class="zone-info">
+      <h4>Wichit</h4>
+      <div class="zone-schools">HeadStart City · Rainbow Montessori</div>
+      <div class="zone-meta">70+ properties · Condos & townhouses<br>15,000 – 60,000 THB/month</div>
+    </div>
+  </div>
+
+  <div class="zone-card fade-in">
+    <div class="zone-thumb">
+      <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400&q=80" alt="Chalong villa" loading="lazy">
+    </div>
+    <div class="zone-info">
+      <h4>Chalong</h4>
+      <div class="zone-schools">Oak Meadow · Buds · BCIS</div>
+      <div class="zone-meta">20+ properties · Houses & villas<br>18,000 – 200,000 THB/month</div>
+    </div>
+  </div>
+
+  <div class="zone-card fade-in delay-1">
+    <div class="zone-thumb">
+      <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&q=80" alt="Rawai villa" loading="lazy">
+    </div>
+    <div class="zone-info">
+      <h4>Rawai · Nai Harn</h4>
+      <div class="zone-schools">ISP · Lighthouse · École Française</div>
+      <div class="zone-meta">34+ properties · Villas & condos<br>22,000 – 200,000 THB/month</div>
+    </div>
+  </div>
+
+  <div class="zone-card fade-in delay-2">
+    <div class="zone-thumb">
+      <img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=400&q=80" alt="Phuket island" loading="lazy">
+    </div>
+    <div class="zone-info">
+      <h4>Island-wide</h4>
+      <div class="zone-schools">All 18 international schools covered</div>
+      <div class="zone-meta">164 residential communities mapped<br>Direct-owner contacts verified</div>
+      <div class="zone-badge" style="background: var(--gold);">Full Coverage</div>
+    </div>
+  </div>
+
+</div>
+```
+
   </div>
 </section>
 
-<section class="for-schools" id="schools">
-  <div class="section-inner">
-    <div class="fade-in">
-      <div class="section-label" data-i18n="schools_label">For Schools</div>
-      <h2 class="section-title" data-i18n="schools_title">A smoother transition<br>for your incoming families.</h2>
-      <p class="section-text" data-i18n="schools_text">We partner with international schools to reduce the friction of relocation. When families settle faster, they engage sooner — with the school, the community, and the island.</p>
+<!-- ==================== SCHOOLS SHOWCASE ==================== -->
+
+<section class="schools-showcase" id="schools">
+  <div class="showcase-header">
+    <div class="section-label">International Schools</div>
+    <div class="section-title">World-class education on your doorstep</div>
+    <p class="section-desc">Phuket hosts 18 accredited international schools offering British, American, IB, and bilingual curricula — from Early Years through Sixth Form.</p>
+  </div>
+  <div class="schools-grid">
+    <div class="school-tile fade-in">
+      <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500&q=80" alt="School campus" loading="lazy">
+      <div class="tile-info">
+        <div class="tile-zone">Koh Kaew</div>
+        <div class="tile-name">British International School</div>
+        <div class="tile-type">IB & British Curriculum</div>
+      </div>
     </div>
-    <div class="schools-content">
-      <ul class="promise-list fade-in">
-        <li data-i18n="promise1">Complimentary housing consultation for every incoming family referred by your school</li>
-        <li data-i18n="promise2">A branded housing guide tailored to your school's catchment area — ready to share with new admissions</li>
-        <li data-i18n="promise3">Direct, verified contact with property owners — no third-party chains or inflated commissions</li>
-        <li data-i18n="promise4">Multilingual support in five languages, covering the full spectrum of your school's parent community</li>
-        <li data-i18n="promise5">Zero cost to the school. Zero commercial presence on campus. Complete discretion</li>
-      </ul>
-      <div class="school-cta-box fade-in">
-        <h3 data-i18n="cta_title">We'd welcome the opportunity to introduce our services to your team.</h3>
-        <p data-i18n="cta_text">A brief call or meeting at your convenience — no presentation decks, no sales pitch. Just a conversation about how we might support your families.</p>
-        <a href="#contact" class="btn-gold" data-i18n="cta_btn">Get in touch</a>
+    <div class="school-tile fade-in delay-1">
+      <img src="https://images.unsplash.com/photo-1613896527026-f195d5c818ed?w=500&q=80" alt="Students learning" loading="lazy">
+      <div class="tile-info">
+        <div class="tile-zone">Thalang</div>
+        <div class="tile-name">UWC Thailand</div>
+        <div class="tile-type">IB World School</div>
+      </div>
+    </div>
+    <div class="school-tile fade-in delay-2">
+      <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500&q=80" alt="Creative classroom" loading="lazy">
+      <div class="tile-info">
+        <div class="tile-zone">Cherng Talay</div>
+        <div class="tile-name">HeadStart</div>
+        <div class="tile-type">IB & British Curriculum</div>
+      </div>
+    </div>
+    <div class="school-tile fade-in delay-3">
+      <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?w=500&q=80" alt="School activities" loading="lazy">
+      <div class="tile-info">
+        <div class="tile-zone">Rawai</div>
+        <div class="tile-name">International School Phuket</div>
+        <div class="tile-type">British Curriculum</div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="trust">
-  <div class="fade-in">
-    <p class="trust-quote" data-i18n="trust_quote">"The right home near the right school changes everything for a family. We make sure that match happens."</p>
-    <p class="trust-attr" data-i18n="trust_attr">Trusted by families relocating to Phuket since 2025</p>
+<!-- ==================== FOR SCHOOLS ==================== -->
+
+<section class="for-schools" id="for-schools">
+  <div class="section-inner">
+    <div class="section-label fade-in">For Schools</div>
+    <div class="section-title fade-in">A smoother transition for incoming families.</div>
+    <div class="fs-grid">
+      <div class="fs-img fade-in">
+        <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&q=80" alt="School administrator meeting with parents" loading="lazy">
+      </div>
+      <div class="fade-in delay-1">
+        <p class="section-desc" style="margin-bottom: 2rem;">We partner with international schools to reduce the friction of relocation. When families settle faster, they engage sooner — with the school, the community, and the island.</p>
+        <ul class="fs-points">
+          <li>Complimentary housing consultation for every incoming family referred by your school</li>
+          <li>A branded housing guide tailored to your school's catchment area — ready to share with new admissions</li>
+          <li>Direct, verified contact with property owners — no third-party chains or inflated commissions</li>
+          <li>Multilingual support in five languages, covering the full spectrum of your school's parent community</li>
+          <li>Zero cost to the school. Zero commercial presence on campus. Complete discretion</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
+
+<!-- ==================== TESTIMONIAL ==================== -->
+
+<section class="testimonial">
+  <div class="testimonial-bg"></div>
+  <div class="testimonial-content fade-in">
+    <blockquote>"The right home near the right school changes everything for a family. We make sure that match happens."</blockquote>
+    <cite>Domovoy — Trusted by relocating families since 2025</cite>
+  </div>
+</section>
+
+<!-- ==================== CONTACT ==================== -->
 
 <section class="contact" id="contact">
-  <div class="fade-in">
-    <div class="section-label" style="color:var(--gold)" data-i18n="nav_contact">Contact</div>
-    <h2 class="section-title" style="color:var(--white);font-size:clamp(1.6rem,3vw,2.2rem)" data-i18n="contact_title">Let's start a conversation.</h2>
-    <p class="contact-subtitle" data-i18n="contact_sub">Whether you're a school administrator, a relocating family, or a relocation consultant — we're here to help.</p>
-    <div class="contact-channels">
-      <div class="contact-item"><div class="ch-label">WhatsApp</div><div class="ch-value"><a href="https://wa.me/66XXXXXXXXX">+66 XX XXX XXXX</a></div></div>
-      <div class="contact-item"><div class="ch-label">Email</div><div class="ch-value"><a href="mailto:schools@domovoy.co.th">schools@domovoy.co.th</a></div></div>
-      <div class="contact-item"><div class="ch-label">Line</div><div class="ch-value"><a href="#">@domovoy</a></div></div>
+  <div class="section-inner">
+    <div class="section-label fade-in" style="color: var(--gold);">Contact</div>
+    <div class="section-title fade-in">Let's start a conversation.</div>
+    <p class="section-desc fade-in">Whether you're a school administrator, a relocating family, or a relocation consultant — we're here to help.</p>
+    <div class="contact-grid">
+      <div class="contact-methods fade-in delay-1">
+        <a href="https://wa.me/66XXXXXXXXX" class="contact-method">
+          <div class="cm-label">WhatsApp</div>
+          <div class="cm-value">+66 XX XXX XXXX</div>
+        </a>
+        <a href="mailto:schools@domovoy.co.th" class="contact-method">
+          <div class="cm-label">Email</div>
+          <div class="cm-value">schools@domovoy.co.th</div>
+        </a>
+        <a href="#" class="contact-method">
+          <div class="cm-label">Line</div>
+          <div class="cm-value">@domovoy</div>
+        </a>
+        <div class="contact-langs">
+          English · Français · Русский · ไทย · 中文
+        </div>
+      </div>
+      <div class="fade-in delay-2" style="display: flex; align-items: center; justify-content: center;">
+        <div style="text-align: center; padding: 3rem;">
+          <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 300; color: rgba(255,255,255,0.15); letter-spacing: 0.15em; margin-bottom: 1rem;">DOMOVOY</div>
+          <p style="font-size: 0.85rem; color: rgba(255,255,255,0.3); line-height: 1.8; max-width: 300px;">Your family's transition to Phuket, simplified. From the school gate to your front door.</p>
+        </div>
+      </div>
     </div>
-    <a href="https://wa.me/66XXXXXXXXX" class="btn-gold" data-i18n="contact_btn">Send us a message</a>
-    <p class="contact-languages">English · Français · Русский · ไทย · 中文</p>
   </div>
 </section>
 
+<!-- ==================== FOOTER ==================== -->
+
 <footer>
-  <div class="f-brand">DOMOVOY</div>
-  <div class="f-legal">Domovoy TH Co., Ltd. — Phuket, Thailand</div>
+  <div class="foot-logo">DOMOVOY</div>
+  <div>Domovoy TH Co., Ltd. — Phuket, Thailand</div>
 </footer>
 
+<!-- ==================== SCRIPTS ==================== -->
+
 <script>
-// NAV SCROLL
-const nav=document.getElementById('nav');
-window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60));
-
-// FADE IN
-const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target)}}),{threshold:.15,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.fade-in').forEach(f=>obs.observe(f));
-
-// SMOOTH SCROLL
-document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'});document.getElementById('mobMenu').classList.remove('open');document.getElementById('burger').classList.remove('open')}));
-
-// HAMBURGER
-const burger=document.getElementById('burger'),mob=document.getElementById('mobMenu');
-burger.addEventListener('click',()=>{burger.classList.toggle('open');mob.classList.toggle('open')});
-
-// LANG SWITCHER
-const langSw=document.getElementById('langSw'),langBtn=document.getElementById('langBtn');
-langBtn.addEventListener('click',e=>{e.stopPropagation();langSw.classList.toggle('open')});
-document.addEventListener('click',()=>langSw.classList.remove('open'));
-
-const T={
-en:{nav_approach:"Approach",nav_coverage:"Coverage",nav_schools:"For Schools",nav_contact:"Contact",hero_eyebrow:"Phuket Family Housing",hero_title:'Helping Families Settle<br>Near the <em>Right School</em>',hero_text:"Curated housing solutions for families relocating to Phuket's international school community. Verified properties, local expertise, zero pressure.",hero_cta:"Discover more",challenge_label:"The Challenge",challenge_title:"Families choose the school first.<br>The home comes second.",challenge_p1:'Every year, hundreds of families relocate to Phuket for its international schools. They face a fragmented rental market, unverified listings, language barriers, and agents who don\'t understand what "near the school" actually means for a family\'s daily life.',challenge_p2:"We built Domovoy to solve this. Starting from the school your family has chosen, we match you with verified, family-suitable properties — in the right zone, at the right price, with transparent terms.",stat_schools:"International schools",stat_props:"Verified properties",stat_zones:"Zones covered",stat_langs:"Languages spoken",approach_label:"Our Approach",approach_title:"School-first. Family-first.<br>Always.",approach_text:"We don't start with the property. We start with where your children will learn — and build everything around that.",card1_title:"School-First Matching",card1_text:"Tell us which school your family has chosen. We map every verified property within a 15-minute radius — houses, villas, condominiums — filtered by your family size, budget, and lifestyle preferences.",card2_title:"Verified Properties Only",card2_text:"Every property in our inventory has been visited. Every owner has been identified and contacted directly. Every lease term has been reviewed. No middlemen, no surprises, no hidden fees.",card3_title:"Multilingual Support",card3_text:"Our team operates in English, French, Russian, Thai, and Chinese. Every family communicates in their own language — from the first enquiry through to move-in day and beyond.",coverage_label:"Coverage",coverage_title:"Every school zone. Every price range.",coverage_text:"We maintain a live inventory across Phuket's key residential zones, matched to the international schools families choose most.",zone_island:"Island-wide",zone_island_schools:"All 18 international schools covered",zone_island_meta:"164 residential communities mapped<br>Direct-owner contacts verified",schools_label:"For Schools",schools_title:"A smoother transition<br>for your incoming families.",schools_text:"We partner with international schools to reduce the friction of relocation. When families settle faster, they engage sooner — with the school, the community, and the island.",promise1:"Complimentary housing consultation for every incoming family referred by your school",promise2:"A branded housing guide tailored to your school's catchment area — ready to share with new admissions",promise3:"Direct, verified contact with property owners — no third-party chains or inflated commissions",promise4:"Multilingual support in five languages, covering the full spectrum of your school's parent community",promise5:"Zero cost to the school. Zero commercial presence on campus. Complete discretion",cta_title:"We'd welcome the opportunity to introduce our services to your team.",cta_text:"A brief call or meeting at your convenience — no presentation decks, no sales pitch. Just a conversation about how we might support your families.",cta_btn:"Get in touch",trust_quote:'"The right home near the right school changes everything for a family. We make sure that match happens."',trust_attr:"Trusted by families relocating to Phuket since 2025",contact_title:"Let's start a conversation.",contact_sub:"Whether you're a school administrator, a relocating family, or a relocation consultant — we're here to help.",contact_btn:"Send us a message"},
-fr:{nav_approach:"Approche",nav_coverage:"Zones",nav_schools:"Écoles",nav_contact:"Contact",hero_eyebrow:"Logement familial à Phuket",hero_title:'Aider les familles à s\'installer<br>près de la <em>bonne école</em>',hero_text:"Des solutions de logement sélectionnées pour les familles qui s'installent à Phuket pour ses écoles internationales. Propriétés vérifiées, expertise locale, sans pression.",hero_cta:"En savoir plus",challenge_label:"Le défi",challenge_title:"Les familles choisissent l'école d'abord.<br>Le logement vient ensuite.",challenge_p1:"Chaque année, des centaines de familles s'installent à Phuket pour ses écoles internationales. Elles font face à un marché locatif fragmenté, des annonces non vérifiées, des barrières linguistiques et des agents qui ne comprennent pas ce que « près de l'école » signifie concrètement au quotidien.",challenge_p2:"Nous avons créé Domovoy pour résoudre ce problème. En partant de l'école choisie par votre famille, nous vous proposons des propriétés vérifiées et adaptées — dans la bonne zone, au bon prix, en toute transparence.",stat_schools:"Écoles internationales",stat_props:"Propriétés vérifiées",stat_zones:"Zones couvertes",stat_langs:"Langues parlées",approach_label:"Notre approche",approach_title:"L'école d'abord. La famille d'abord.<br>Toujours.",approach_text:"Nous ne commençons pas par le bien immobilier. Nous commençons par l'endroit où vos enfants apprendront — et nous construisons tout autour.",card1_title:"Recherche par école",card1_text:"Dites-nous quelle école votre famille a choisie. Nous cartographions chaque propriété vérifiée dans un rayon de 15 minutes — maisons, villas, condominiums — filtrée selon la taille de votre famille, votre budget et vos préférences.",card2_title:"Propriétés vérifiées uniquement",card2_text:"Chaque propriété de notre inventaire a été visitée. Chaque propriétaire a été identifié et contacté directement. Chaque bail a été examiné. Pas d'intermédiaires, pas de surprises, pas de frais cachés.",card3_title:"Support multilingue",card3_text:"Notre équipe opère en anglais, français, russe, thaï et chinois. Chaque famille communique dans sa propre langue — de la première demande jusqu'au jour de l'emménagement.",coverage_label:"Couverture",coverage_title:"Chaque zone scolaire. Chaque gamme de prix.",coverage_text:"Nous maintenons un inventaire actualisé dans les principales zones résidentielles de Phuket, associé aux écoles internationales les plus demandées.",zone_island:"Toute l'île",zone_island_schools:"Les 18 écoles internationales couvertes",zone_island_meta:"164 communautés résidentielles cartographiées<br>Contacts propriétaires vérifiés",schools_label:"Pour les écoles",schools_title:"Une transition plus fluide<br>pour vos nouvelles familles.",schools_text:"Nous collaborons avec les écoles internationales pour faciliter la relocalisation. Quand les familles s'installent plus vite, elles s'engagent plus tôt — avec l'école, la communauté et l'île.",promise1:"Consultation logement offerte pour chaque famille recommandée par votre école",promise2:"Un guide logement personnalisé à la zone de votre école — prêt à partager avec les nouvelles admissions",promise3:"Contact direct et vérifié avec les propriétaires — pas de chaîne d'intermédiaires ni de commissions gonflées",promise4:"Support multilingue en cinq langues, couvrant tout le spectre de votre communauté parentale",promise5:"Aucun coût pour l'école. Aucune présence commerciale sur le campus. Discrétion totale",cta_title:"Nous serions ravis de présenter nos services à votre équipe.",cta_text:"Un bref appel ou rendez-vous à votre convenance — sans présentation commerciale. Juste une conversation sur la façon dont nous pouvons accompagner vos familles.",cta_btn:"Nous contacter",trust_quote:"« Le bon logement près de la bonne école change tout pour une famille. Nous faisons en sorte que cette rencontre ait lieu. »",trust_attr:"La confiance des familles qui s'installent à Phuket depuis 2025",contact_title:"Commençons une conversation.",contact_sub:"Que vous soyez administrateur scolaire, famille en relocalisation ou consultant — nous sommes là pour vous aider.",contact_btn:"Envoyez-nous un message"},
-ru:{nav_approach:"Подход",nav_coverage:"Зоны",nav_schools:"Для школ",nav_contact:"Контакт",hero_eyebrow:"Семейное жильё на Пхукете",hero_title:'Помогаем семьям устроиться<br>рядом с <em>нужной школой</em>',hero_text:"Подобранные решения для семей, переезжающих на Пхукет ради международных школ. Проверенная недвижимость, местная экспертиза, без давления.",hero_cta:"Узнать больше",challenge_label:"Проблема",challenge_title:"Семьи выбирают школу первой.<br>Жильё — второй.",challenge_p1:"Каждый год сотни семей переезжают на Пхукет ради международных школ. Они сталкиваются с фрагментированным рынком аренды, непроверенными объявлениями, языковыми барьерами и агентами, которые не понимают, что значит «рядом со школой» для повседневной жизни семьи.",challenge_p2:"Мы создали Домовой, чтобы решить эту проблему. Отталкиваясь от школы, которую выбрала ваша семья, мы подбираем проверенное, подходящее жильё — в нужной зоне, по нужной цене, с прозрачными условиями.",stat_schools:"Международных школ",stat_props:"Проверенных объектов",stat_zones:"Зон охвата",stat_langs:"Языков поддержки",approach_label:"Наш подход",approach_title:"Сначала школа. Сначала семья.<br>Всегда.",approach_text:"Мы начинаем не с недвижимости. Мы начинаем с того, где будут учиться ваши дети — и выстраиваем всё вокруг этого.",card1_title:"Подбор от школы",card1_text:"Скажите нам, какую школу выбрала ваша семья. Мы покажем все проверенные объекты в радиусе 15 минут — дома, виллы, кондоминиумы — с учётом размера семьи, бюджета и предпочтений.",card2_title:"Только проверенная недвижимость",card2_text:"Каждый объект в нашей базе был осмотрен. Каждый владелец идентифицирован и лично контактирован. Каждый договор аренды проверен. Без посредников, без сюрпризов, без скрытых комиссий.",card3_title:"Многоязычная поддержка",card3_text:"Наша команда работает на английском, французском, русском, тайском и китайском языках. Каждая семья общается на своём языке — от первого запроса до дня заселения.",coverage_label:"Покрытие",coverage_title:"Каждая школьная зона. Любой бюджет.",coverage_text:"Мы поддерживаем актуальную базу по ключевым жилым зонам Пхукета, привязанную к наиболее востребованным международным школам.",zone_island:"По всему острову",zone_island_schools:"Все 18 международных школ охвачены",zone_island_meta:"164 жилых комплекса нанесены на карту<br>Контакты собственников проверены",schools_label:"Для школ",schools_title:"Более плавный переход<br>для ваших новых семей.",schools_text:"Мы сотрудничаем с международными школами, чтобы снизить сложности переезда. Когда семьи быстрее обустраиваются, они раньше вовлекаются — в школу, сообщество и жизнь острова.",promise1:"Бесплатная консультация по жилью для каждой семьи, направленной вашей школой",promise2:"Брендированный гид по жилью для зоны вашей школы — готов к отправке новым поступающим",promise3:"Прямой, проверенный контакт с собственниками — без цепочки посредников и завышенных комиссий",promise4:"Многоязычная поддержка на пяти языках, охватывающая весь спектр родительского сообщества вашей школы",promise5:"Без затрат для школы. Без коммерческого присутствия на территории. Полная конфиденциальность",cta_title:"Мы будем рады представить наши услуги вашей команде.",cta_text:"Краткий звонок или встреча в удобное для вас время — без презентаций и продаж. Просто разговор о том, как мы можем поддержать ваши семьи.",cta_btn:"Связаться с нами",trust_quote:"«Правильный дом рядом с правильной школой меняет всё для семьи. Мы делаем так, чтобы это совпадение произошло.»",trust_attr:"Нам доверяют семьи, переезжающие на Пхукет с 2025 года",contact_title:"Давайте начнём разговор.",contact_sub:"Будь вы администратор школы, переезжающая семья или консультант по релокации — мы готовы помочь.",contact_btn:"Написать нам"},
-th:{nav_approach:"แนวทาง",nav_coverage:"พื้นที่",nav_schools:"สำหรับโรงเรียน",nav_contact:"ติดต่อ",hero_eyebrow:"ที่พักสำหรับครอบครัวในภูเก็ต",hero_title:'ช่วยครอบครัวตั้งถิ่นฐาน<br>ใกล้<em>โรงเรียนที่ใช่</em>',hero_text:"โซลูชันที่พักคัดสรรสำหรับครอบครัวที่ย้ายมาภูเก็ตเพื่อโรงเรียนนานาชาติ ทรัพย์สินที่ตรวจสอบแล้ว ความเชี่ยวชาญท้องถิ่น ไม่มีแรงกดดัน",hero_cta:"เรียนรู้เพิ่มเติม",challenge_label:"ความท้าทาย",challenge_title:"ครอบครัวเลือกโรงเรียนก่อน<br>บ้านมาทีหลัง",challenge_p1:"ทุกปี ครอบครัวหลายร้อยครอบครัวย้ายมาภูเก็ตเพื่อโรงเรียนนานาชาติ พวกเขาเผชิญกับตลาดเช่าที่กระจัดกระจาย รายการที่ไม่ได้ตรวจสอบ อุปสรรคด้านภาษา และเอเจนต์ที่ไม่เข้าใจว่า \"ใกล้โรงเรียน\" หมายถึงอะไรในชีวิตประจำวันของครอบครัว",challenge_p2:"เราสร้าง Domovoy ขึ้นเพื่อแก้ปัญหานี้ เริ่มจากโรงเรียนที่ครอบครัวคุณเลือก เราจับคู่ทรัพย์สินที่ตรวจสอบแล้วและเหมาะสมกับครอบครัว — ในโซนที่ถูกต้อง ราคาที่เหมาะสม เงื่อนไขโปร่งใส",stat_schools:"โรงเรียนนานาชาติ",stat_props:"ทรัพย์สินที่ตรวจสอบแล้ว",stat_zones:"โซนที่ครอบคลุม",stat_langs:"ภาษาที่รองรับ",approach_label:"แนวทางของเรา",approach_title:"โรงเรียนมาก่อน ครอบครัวมาก่อน<br>เสมอ",approach_text:"เราไม่เริ่มจากทรัพย์สิน เราเริ่มจากที่ที่ลูกๆ ของคุณจะเรียน — และสร้างทุกอย่างรอบนั้น",card1_title:"จับคู่ตามโรงเรียน",card1_text:"บอกเราว่าครอบครัวคุณเลือกโรงเรียนไหน เราจะแมปทรัพย์สินที่ตรวจสอบแล้วทุกแห่งในรัศมี 15 นาที — บ้าน วิลล่า คอนโด — กรองตามขนาดครอบครัว งบประมาณ และไลฟ์สไตล์",card2_title:"เฉพาะทรัพย์สินที่ตรวจสอบแล้ว",card2_text:"ทรัพย์สินทุกรายการในฐานข้อมูลของเราได้รับการเยี่ยมชม เจ้าของทุกรายได้รับการระบุตัวตนและติดต่อโดยตรง สัญญาเช่าทุกฉบับได้รับการตรวจสอบ ไม่มีนายหน้า ไม่มีเซอร์ไพรส์ ไม่มีค่าธรรมเนียมแอบแฝง",card3_title:"รองรับหลายภาษา",card3_text:"ทีมของเราให้บริการในภาษาอังกฤษ ฝรั่งเศส รัสเซีย ไทย และจีน ทุกครอบครัวสื่อสารในภาษาของตน — ตั้งแต่การสอบถามครั้งแรกจนถึงวันย้ายเข้า",coverage_label:"พื้นที่ครอบคลุม",coverage_title:"ทุกโซนโรงเรียน ทุกระดับราคา",coverage_text:"เรามีฐานข้อมูลทรัพย์สินที่อัปเดตอยู่เสมอในโซนที่อยู่อาศัยหลักของภูเก็ต จับคู่กับโรงเรียนนานาชาติที่ครอบครัวเลือกมากที่สุด",zone_island:"ทั่วเกาะ",zone_island_schools:"ครอบคลุมทั้ง 18 โรงเรียนนานาชาติ",zone_island_meta:"164 ชุมชนที่อยู่อาศัยถูกแมป<br>ติดต่อเจ้าของโดยตรงที่ตรวจสอบแล้ว",schools_label:"สำหรับโรงเรียน",schools_title:"การเปลี่ยนผ่านที่ราบรื่นขึ้น<br>สำหรับครอบครัวใหม่ของคุณ",schools_text:"เราร่วมมือกับโรงเรียนนานาชาติเพื่อลดความยุ่งยากในการย้ายถิ่นฐาน เมื่อครอบครัวตั้งถิ่นฐานเร็วขึ้น พวกเขามีส่วนร่วมเร็วขึ้น — กับโรงเรียน ชุมชน และเกาะ",promise1:"ให้คำปรึกษาด้านที่พักฟรีสำหรับทุกครอบครัวที่แนะนำโดยโรงเรียนของคุณ",promise2:"คู่มือที่พักที่ปรับแต่งสำหรับพื้นที่โรงเรียนของคุณ — พร้อมแชร์กับนักเรียนใหม่",promise3:"ติดต่อตรงกับเจ้าของทรัพย์สินที่ตรวจสอบแล้ว — ไม่มีห่วงโซ่นายหน้าหรือค่าคอมมิชชั่นที่สูงเกินจริง",promise4:"รองรับ 5 ภาษา ครอบคลุมชุมชนผู้ปกครองทุกกลุ่มของโรงเรียนคุณ",promise5:"ไม่มีค่าใช้จ่ายสำหรับโรงเรียน ไม่มีการแสดงตนเชิงพาณิชย์ในวิทยาเขต รักษาความเป็นส่วนตัวอย่างสมบูรณ์",cta_title:"เรายินดีที่จะแนะนำบริการของเราให้กับทีมของคุณ",cta_text:"สนทนาสั้นๆ หรือนัดพบตามความสะดวกของคุณ — ไม่มีการนำเสนอขาย แค่สนทนาเรื่องวิธีที่เราสามารถช่วยครอบครัวของคุณ",cta_btn:"ติดต่อเรา",trust_quote:"\"บ้านที่ถูกต้องใกล้โรงเรียนที่ถูกต้อง เปลี่ยนทุกอย่างสำหรับครอบครัว เราทำให้การจับคู่นั้นเกิดขึ้น\"",trust_attr:"ได้รับความไว้วางใจจากครอบครัวที่ย้ายมาภูเก็ตตั้งแต่ 2025",contact_title:"มาเริ่มสนทนากัน",contact_sub:"ไม่ว่าคุณจะเป็นผู้บริหารโรงเรียน ครอบครัวที่กำลังย้ายถิ่นฐาน หรือที่ปรึกษาด้านการย้ายถิ่นฐาน — เราพร้อมช่วยเหลือ",contact_btn:"ส่งข้อความถึงเรา"},
-zh:{nav_approach:"方法",nav_coverage:"覆盖区域",nav_schools:"学校合作",nav_contact:"联系我们",hero_eyebrow:"普吉岛家庭住房",hero_title:'帮助家庭安居<br>在<em>理想学校</em>附近',hero_text:"为搬迁至普吉岛国际学校社区的家庭提供精选住房方案。经过验证的房产，本地专业知识，零压力。",hero_cta:"了解更多",challenge_label:"挑战",challenge_title:"家庭先选学校<br>住房其次",challenge_p1:"每年有数百个家庭因国际学校搬迁至普吉岛。他们面对碎片化的租赁市场、未经验证的房源、语言障碍，以及不理解\u201C学校附近\u201D对家庭日常生活真正意味着什么的中介。",challenge_p2:"我们创建了Domovoy来解决这个问题。从您家庭选择的学校出发，我们为您匹配经过验证的、适合家庭的房产——在合适的区域、合适的价格、透明的条款。",stat_schools:"国际学校",stat_props:"已验证房产",stat_zones:"覆盖区域",stat_langs:"服务语言",approach_label:"我们的方法",approach_title:"学校优先 家庭优先<br>始终如一",approach_text:"我们不从房产开始。我们从您的孩子将要学习的地方开始——围绕它构建一切。",card1_title:"以学校为导向的匹配",card1_text:"告诉我们您的家庭选择了哪所学校。我们会在15分钟车程范围内映射每一处经过验证的房产——别墅、公寓——根据您的家庭规模、预算和生活方式偏好进行筛选。",card2_title:"仅限验证房产",card2_text:"我们库存中的每处房产都经过实地考察。每位业主都已确认身份并直接联系。每份租约都已审核。没有中间人，没有意外，没有隐藏费用。",card3_title:"多语言支持",card3_text:"我们的团队使用英语、法语、俄语、泰语和中文服务。每个家庭都可以使用自己的语言沟通——从首次咨询到入住当天及以后。",coverage_label:"覆盖范围",coverage_title:"每个学区 每个价格区间",coverage_text:"我们在普吉岛的主要住宅区维护实时房源库存，与家庭最常选择的国际学校相匹配。",zone_island:"全岛覆盖",zone_island_schools:"覆盖全部18所国际学校",zone_island_meta:"已映射164个住宅社区<br>业主直接联系方式已验证",schools_label:"学校合作",schools_title:"为您的新生家庭<br>提供更顺畅的过渡",schools_text:"我们与国际学校合作，减少搬迁带来的不便。当家庭更快安顿下来，他们就能更早融入——学校、社区和整个岛屿。",promise1:"为学校推荐的每个新生家庭提供免费住房咨询",promise2:"为您学校的招生区域量身定制品牌化住房指南——随时与新入学家庭分享",promise3:"与业主直接验证的联系——没有第三方链条或夸大的佣金",promise4:"五种语言的多语言支持，覆盖您学校家长社区的全部群体",promise5:"学校零成本 校园内零商业存在 完全保密",cta_title:"我们很乐意向您的团队介绍我们的服务",cta_text:"在您方便的时候进行简短的电话或会面——没有演示文稿，没有销售推介。只是一次关于我们如何支持您家庭的对话。",cta_btn:"联系我们",trust_quote:"\u201C合适学校旁的合适住房，改变了一个家庭的一切。我们确保这种匹配发生。\u201D",trust_attr:"自2025年起受到搬迁至普吉岛家庭的信赖",contact_title:"让我们开始对话",contact_sub:"无论您是学校管理者、搬迁家庭还是搬迁顾问——我们随时为您服务。",contact_btn:"给我们留言"}
-};
-
-function setLang(lang){
-  document.documentElement.setAttribute('data-lang',lang);
-  document.documentElement.setAttribute('lang',lang);
-  langBtn.textContent=lang.toUpperCase();
-  document.querySelectorAll('.lang-dd button').forEach(b=>{b.classList.toggle('active',b.dataset.lang===lang)});
-  const dict=T[lang]||T.en;
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const k=el.getAttribute('data-i18n');
-    if(dict[k])el.innerHTML=dict[k];
+  // Navbar scroll effect
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 80) {
+      nav.classList.add('scrolled');
+      nav.classList.remove('hero-nav');
+    } else {
+      nav.classList.remove('scrolled');
+      nav.classList.add('hero-nav');
+    }
   });
-  langSw.classList.remove('open');
-}
-document.querySelectorAll('.lang-dd button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setLang(b.dataset.lang)}));
+
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Language switch
+  const langBtn = document.getElementById('langSwitch');
+  const langs = ['EN', 'FR', 'RU', 'TH', '中文'];
+  let currentLang = 0;
+  langBtn.addEventListener('click', () => {
+    currentLang = (currentLang + 1) % langs.length;
+    langBtn.textContent = langs[currentLang];
+  });
 </script>
+
 </body>
 </html>
